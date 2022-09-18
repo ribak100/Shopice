@@ -25,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $s = $seller->login();
-    if(gettype($s) === 'string'){
-        http_response_code(402);
-        echo json_encode(array('success' => 0, 'message' => $s));
-    }
-    else{
+    if(gettype($s) === 'array'){
         http_response_code(200);
         echo json_encode(array('success' => 1, 'message' => 'Login Successful', 'seller' => $s));
+    }
+    else{
+        http_response_code(402);
+        echo json_encode(array('success' => 0, 'message' => $s));
     }
 }
 else {
