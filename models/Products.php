@@ -56,6 +56,20 @@ class Product {
 
     }
 
+    //method to return list of profucts
+    public function get_product_per_seller()
+    {
+        global $database;
+        $this->seller_id = trim(htmlspecialchars(strip_tags($this->seller_id)));
+
+        $sql = "SELECT * FROM $this->table WHERE seller_id = '" .$database->escape_value($this->seller_id). "' ";
+
+        $result = $database->query($sql);
+
+        return $database->fetch_array($result);
+
+    }
+
 }
 
 $product = new Product();
