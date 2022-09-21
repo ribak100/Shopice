@@ -20,7 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void getSellers() {
     ServerHandler()
         .getSellers()
-        .then((value) => Navigator.of(context).popAndPushNamed(SellersScreen.routeName))
+        .then((value) => Navigator.of(context)
+            .popAndPushNamed(SellersScreen.routeName, arguments: value))
         .catchError((e) => print(e));
   }
 
@@ -34,17 +35,18 @@ class _SplashScreenState extends State<SplashScreen> {
         () => {
               showLoadingSellers = true,
               setState(() {}),
-              _timer = Timer(const Duration(seconds: 3), () =>{
-                getSellers(),
-              })
-
+              _timer = Timer(
+                  const Duration(seconds: 3),
+                  () => {
+                        getSellers(),
+                      })
             });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _timer.cacel();
+    _timer.cancel();
 
     super.dispose();
   }
