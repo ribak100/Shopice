@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shopice/widgets/product_item.dart';
+import '../models/seller.dart';
 import '../models/product.dart';
 
 class ProductScreenDetails extends StatelessWidget {
@@ -21,7 +22,7 @@ class ProductScreenDetails extends StatelessWidget {
             padding: const EdgeInsets.only(left: 85.0),
             child: Text(
               product.name!,
-              style: GoogleFonts.inter(),
+              style: GoogleFonts.poppins(),
             ),
           ),
           backgroundColor: const Color(0xff4A777A),
@@ -55,14 +56,100 @@ class ProductScreenDetails extends StatelessWidget {
                     alignment: Alignment.center,
                   ),
                 ),
+                //product price per kh
                 Container(
-                    padding: EdgeInsets.only(left: 40.0),
+                    padding: EdgeInsets.only(left: 20.0),
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      '#${product.pricePerKg!} /kg',
-                      style: GoogleFonts.poppins(color: Color(0xff4A777A), fontSize: 25.0, fontWeight: FontWeight.w500),
+                      '#${product.pricePerKg!}/kg',
+                      style: GoogleFonts.poppins(
+                          color: Color(0xff4A777A),
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w500),
                     )),
-                //product price per kh
+                //Product description
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 120.0,
+                        child: Text(
+                          product.description!,
+                          style: GoogleFonts.poppins(fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 15.0),
+                          height: 100,
+                          width: 350.0,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xffE9E6E6),
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 40.0,
+                                        width: 40.0,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      //Text(),
+                                    ],
+                                  ),
+                                ],
+                              ))),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row( mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(margin: EdgeInsets.only(right: 30.0),
+                              height: 36,
+                              width: 120.0,
+                              decoration: BoxDecoration(color: Color(0xff4A777A),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(color: Color(0xff4A777A))),
+                              child: FlatButton(
+                                  onPressed: () => print('Flat buton pressed'),
+                                  child: Text(
+                                    'Buy Now',
+                                    style:
+                                        GoogleFonts.poppins(color: Colors.white),
+                                  )),
+                            ),
+                            Container(
+                              height: 36,
+                              width: 120.0,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(color: Color(0xff4A777A))),
+                              child: FlatButton(
+                                  onPressed: () => print(
+                                        'Flat buton pressed',
+                                      ),
+                                  child: Text(
+                                    'Add to Cart',
+                                    style: GoogleFonts.poppins(
+                                        color: Color(0xff4A777A)),
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    IconButton(onPressed: ()=> print('Icon buton pressed'), icon: Icon((Icons.home)))
+                  ],
+                )
               ],
             ),
           ),

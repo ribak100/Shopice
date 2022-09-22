@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../models/product.dart';
 import '../utility/colors.dart';
+import '../models/seller.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -18,7 +19,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context)
-          .pushNamed(ProductScreenDetails.routeName, arguments: product),
+          .pushNamed(ProductScreenDetails.routeName, arguments: product, ),
       child: Column(
         //image section
 
