@@ -6,6 +6,8 @@ import '../server_handler.dart';
 import '../models/seller.dart';
 import '../models/product.dart';
 import '../widgets/product_item.dart';
+import '../widgets/most_popular.dart';
+import '../screens/sellers_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   static const routeName = '/product-screen';
@@ -48,11 +50,7 @@ class _ProductScreenState extends State<ProductScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 35.0,
-                    right: 30.0,
-                    top: 50.0,
-                    bottom: 20.0
-                  ),
+                      left: 35.0, right: 30.0, top: 50.0, bottom: 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -78,27 +76,30 @@ class _ProductScreenState extends State<ProductScreen> {
 
                 // Loading widget
                 if (_products.isEmpty)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xff4E8489),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color(0xff4E8489),
+                            ),
+                            strokeWidth: 1.5,
                           ),
-                          strokeWidth: 1.5,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Text(
-                          'Loading Products',
-                          style: GoogleFonts.poppins(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: Text(
+                            'Seller has no product yet',
+                            style: GoogleFonts.poppins(color: Colors.grey),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                 //List of Items
@@ -109,12 +110,14 @@ class _ProductScreenState extends State<ProductScreen> {
                     height: 130.0,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                        itemCount: _products.length,
-                        itemBuilder: (context, index) => ProductItem(product: _products[index], productIndex: index,),),
+                      itemCount: _products.length,
+                      itemBuilder: (context, index) => ProductItem(
+                        product: _products[index],
+                        productIndex: index,
+                      ),
+                    ),
                   ),
                 ),
-
-
               ],
             ),
             Padding(
@@ -125,50 +128,64 @@ class _ProductScreenState extends State<ProductScreen> {
                   //fontWeight: FontWeight.w500,
                   fontSize: 25.0,
                   color: const Color(0xff4E8489),
+                ),
+              ),
+            ),
+            //Most popolar widget
+            if (!_products.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: 0.0),
+                child: SizedBox(
+                  height: 225.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _products.length,
+                    itemBuilder: (context, index) => MostPopular(
+                      product: _products[index],
+                      productIndex: index,
+                    ),
+                  ),
+                ),
+              ),
 
+            if(_products.isEmpty)
+              SizedBox( height: 147.0,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 0.0, top: 30.0),
+                  child: Text(
+                    "Interact with products to see the Most Popular", textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 20.0,
+                      color: Colors.grey,
+
+                    ),
+                  ),
+                ),
+              ),
+
+
+            Padding(
+              padding: const EdgeInsets.only(right: 80.0),
+              child: Text(
+                "Whats The word around",
+                style: GoogleFonts.poppins(
+                  fontSize: 20.0,
+                  color: const Color(0xff4E8489),
                 ),
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: SizedBox(
-                height: 130.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _products.length,
-                  itemBuilder: (context, index) => ProductItem(product: _products[index], productIndex: index,),),
-              ),
-            ),
-
-        Padding(
-          padding: const EdgeInsets.only(right: 80.0, top: 10.0),
-          child: Text(
-            "Whats The word around",
-            style: GoogleFonts.poppins(
-              fontSize: 20.0,
-              color: const Color(0xff4E8489),
-
-            ),
-          ),
-        ),
-
             //comment and description box
             Padding(
-              padding:
-              const EdgeInsets.only(left: 20.0, right: 20.0,),
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+              ),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 80.0,
-                    /*child: Text(
-                      product.description!,
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),*/
-                  ),
                   Container(
                       //margin: EdgeInsets.only(top: 15.0),
-                      height: 100,
+                      height: 95,
                       width: 350.0,
                       child: Container(
                           decoration: BoxDecoration(
@@ -204,7 +221,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                      onPressed: () => print('Icon buton pressed'),
+                      onPressed: () => Navigator.of(context).pop(),
                       icon: Icon((Icons.home))),
                   IconButton(
                       onPressed: () => print('Icon buton pressed'),

@@ -27,7 +27,7 @@ class ProductScreenDetails extends StatelessWidget {
           ),
           backgroundColor: const Color(0xff4A777A),
           leading: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () =>{ Navigator.of(context).pop(), product.interactionCount = (product.interactionCount! +1)!},
             child: const Icon(
               Icons.arrow_back,
               color: Colors.white,
@@ -121,7 +121,7 @@ class ProductScreenDetails extends StatelessWidget {
                               child: FlatButton(
                                   onPressed: () => print('Flat buton pressed'),
                                   child: Text(
-                                    'Buy Now',
+                                    'Buy Now'+ product.interactionCount.toString()!,
                                     style: GoogleFonts.poppins(
                                         color: Colors.white),
                                   )),
@@ -146,6 +146,7 @@ class ProductScreenDetails extends StatelessWidget {
                           ],
                         ),
                       )
+
                     ],
                   ),
                 ),
