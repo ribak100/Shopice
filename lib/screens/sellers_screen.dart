@@ -76,7 +76,9 @@ class _SellersScreenState extends State<SellersScreen> {
                   .toList(),
             )
           ],
+
         ),
+
       ),
     ));
   }

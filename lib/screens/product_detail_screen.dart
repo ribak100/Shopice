@@ -107,23 +107,27 @@ class ProductScreenDetails extends StatelessWidget {
                               ))),
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child: Row( mainAxisAlignment: MainAxisAlignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(margin: EdgeInsets.only(right: 30.0),
+                            Container(
+                              margin: EdgeInsets.only(right: 30.0, top: 5.0),
                               height: 36,
                               width: 120.0,
-                              decoration: BoxDecoration(color: Color(0xff4A777A),
+                              decoration: BoxDecoration(
+                                  color: Color(0xff4A777A),
                                   borderRadius: BorderRadius.circular(10.0),
                                   border: Border.all(color: Color(0xff4A777A))),
                               child: FlatButton(
                                   onPressed: () => print('Flat buton pressed'),
                                   child: Text(
                                     'Buy Now',
-                                    style:
-                                        GoogleFonts.poppins(color: Colors.white),
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white),
                                   )),
                             ),
                             Container(
+                              margin: EdgeInsets.only(top: 5.0),
                               height: 36,
                               width: 120.0,
                               decoration: BoxDecoration(
@@ -145,10 +149,30 @@ class ProductScreenDetails extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    IconButton(onPressed: ()=> print('Icon buton pressed'), icon: Icon((Icons.home)))
-                  ],
+                Container(
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  margin: EdgeInsets.only(top: 23.0),
+                  decoration: BoxDecoration(color: Color(0xffF0F0F0)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () => print('Icon buton pressed'),
+                          icon: Icon((Icons.home))),
+                      IconButton(
+                          onPressed: () => print('Icon buton pressed'),
+                          icon: Icon((Icons.search))),
+                      IconButton(
+                          onPressed: () => print('Icon buton pressed'),
+                          icon: Icon((Icons.shopping_cart_sharp))),
+                      IconButton(
+                          onPressed: () => print('Icon buton pressed'),
+                          icon: Icon((Icons.menu))),
+                      IconButton(
+                          onPressed: () => print('Icon buton pressed'),
+                          icon: Icon((Icons.person_outline))),
+                    ],
+                  ),
                 )
               ],
             ),
