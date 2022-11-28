@@ -9,6 +9,7 @@ import '../screens/porduct_screen.dart';
 class SellerItem extends StatelessWidget {
   final Seller seller;
   final Color backgroundColor;
+  final rating = 4;
 
   const SellerItem({
     Key? key,
@@ -19,7 +20,8 @@ class SellerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(ProductScreen.routeName, arguments: seller),
+      onTap: () => Navigator.of(context)
+          .pushNamed(ProductScreen.routeName, arguments: seller),
       child: Container(
         margin: const EdgeInsets.symmetric(
           vertical: 15.0,
@@ -51,7 +53,7 @@ class SellerItem extends StatelessWidget {
                 ),
                 Container(
                     width: 164.0,
-                    padding: const EdgeInsets.only(left: 15.0, top: 5.0),
+                    padding: const EdgeInsets.only(left: 13.0, top: 5.0),
                     child: Text(
                       seller.address!,
                       maxLines: 2,
@@ -61,20 +63,81 @@ class SellerItem extends StatelessWidget {
                         fontSize: 13,
                       ),
                     )),
-                Container(padding: const EdgeInsets.only(left: 15.0, top: 5.0),
+                Container(
+                  padding: const EdgeInsets.only(left: 10.0, top: 5.0),
                   width: 164.0,
-                    child: Text("No Rating",
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.poppins(
-                          color: Colors.grey,
-                          fontSize: 13,
-                        ))),
+                  child: Row(
+                    children: [
+                      if (rating == 5)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                          ],
+                        ),
+                      if (rating == 4)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.white),
+                          ],
+                        ),
+                      if (rating == 3)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                          ],
+                        ),
+                      if (rating == 2)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                          ],
+                        ),
+                      if (rating == 1)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.yellow[700]),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                          ],
+                        ),
+
+                      if (rating == 0)
+                        Row(
+                          children: [
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                            Icon(Icons.star, color: Colors.white),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Image.network(
-                  "http://10.0.2.2:/shopice/assets/${seller.image!}"),
+                  "http://10.0.2.2:/shopice/assets/${seller.image!}", height: 150, width: 140,),
             ),
           ],
         ),

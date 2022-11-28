@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/server_handler.dart';
 
 import 'package:shopice/widgets/product_item.dart';
 import '../models/seller.dart';
@@ -11,11 +12,15 @@ class ProductScreenDetails extends StatelessWidget {
 
   const ProductScreenDetails({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
-    Product product = ModalRoute.of(context)!.settings.arguments as Product;
+    Product product = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as Product;
     return Scaffold(
-        //Appbar
+      //Appbar
         appBar: AppBar(
           elevation: 0.0,
           title: Padding(
@@ -27,7 +32,10 @@ class ProductScreenDetails extends StatelessWidget {
           ),
           backgroundColor: const Color(0xff4A777A),
           leading: GestureDetector(
-            onTap: () =>{ Navigator.of(context).pop(), product.interactionCount = (product.interactionCount! +1)!},
+            onTap: () =>
+            {
+              Navigator.of(context).pop(),
+            },
             child: const Icon(
               Icons.arrow_back,
               color: Colors.white,
@@ -52,14 +60,20 @@ class ProductScreenDetails extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Image.network(
                     "http://10.0.2.2:/shopice/assets/${product.image!}",
-                    height: MediaQuery.of(context).size.height * 1 / 3,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 1 / 3,
                     alignment: Alignment.center,
                   ),
                 ),
                 //product price per kh
                 Container(
                     padding: EdgeInsets.only(left: 20.0),
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: Text(
                       '#${product.pricePerKg!}/kg',
                       style: GoogleFonts.poppins(
@@ -70,7 +84,7 @@ class ProductScreenDetails extends StatelessWidget {
                 //Product description
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                  const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
                   child: Column(
                     children: [
                       SizedBox(
@@ -121,7 +135,7 @@ class ProductScreenDetails extends StatelessWidget {
                               child: FlatButton(
                                   onPressed: () => print('Flat buton pressed'),
                                   child: Text(
-                                    'Buy Now'+ product.interactionCount.toString()!,
+                                    'Buy Now',
                                     style: GoogleFonts.poppins(
                                         color: Colors.white),
                                   )),
@@ -134,7 +148,8 @@ class ProductScreenDetails extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10.0),
                                   border: Border.all(color: Color(0xff4A777A))),
                               child: FlatButton(
-                                  onPressed: () => print(
+                                  onPressed: () =>
+                                      print(
                                         'Flat buton pressed',
                                       ),
                                   child: Text(

@@ -67,7 +67,7 @@ class MostPopular extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: 205.0,
+                  height: 165.0,
                   width: 150.0,
                   margin: const EdgeInsets.only(
                       left: 10.0, right: 10.0, top: 8.0, bottom: .0),

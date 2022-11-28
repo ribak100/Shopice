@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../models/seller.dart';
 import '../widgets/seller_item.dart';
+import './login.dart';
+import './registration_seller.dart';
 
 class SellersScreen extends StatefulWidget {
   static const routeName = '/sellers_screen';
@@ -21,9 +23,9 @@ class _SellersScreenState extends State<SellersScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    sellerItemBackgroundColor.add(const Color(0xffE6F3EC));
-    sellerItemBackgroundColor.add(const Color(0xffE6E6F2));
     sellerItemBackgroundColor.add(const Color(0xffE4EDF4));
+    sellerItemBackgroundColor.add(const Color(0xffE6E6F2));
+    sellerItemBackgroundColor.add(const Color(0xffE6F3EC));
     sellerItemBackgroundColor.add(const Color(0xffE4DAD9));
   }
 
@@ -32,54 +34,142 @@ class _SellersScreenState extends State<SellersScreen> {
     List<Seller> sellers =
         ModalRoute.of(context)?.settings.arguments as List<Seller>;
     return Scaffold(
-        body: Container(
-      alignment: Alignment.center,
-      child: SingleChildScrollView(
-        child: Column(
+      appBar: AppBar(
+        title: Text(
+          "Shopice",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            fontSize: 23.0,
+            color: Color(0xff4E8489),
+          ),
+        ),
+        backgroundColor: Color(0xffE6F3EC),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            //header
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25.0,
-                vertical: 50.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Shopice",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 23.0,
-                      color: const Color(0xff4E8489),
-                    ),
-                  ),
-                  Container(
-                    height: 50.0,
-                    width: 50.0,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey,
-                    ),
-                  )
-                ],
+            DrawerHeader(
+              margin: EdgeInsets.only(bottom: 10.0),
+              decoration: BoxDecoration(color: Color(0xffE6F3EC)),
+              padding: EdgeInsets.only(top: 40.0, left: 15.0),
+              child: Text(
+                "Shopice",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 23.0,
+                  color: Color(0xff4E8489),
+                ),
               ),
             ),
-
-            //list of sellers
-            Column(
-              children: sellers
-                  .map((e) => SellerItem(
-                        seller: e,
-                        backgroundColor: sellerItemBackgroundColor[sellers.indexOf(e)%4],
-                      ))
-                  .toList(),
-            )
+            ListTile(
+              leading: Icon(Icons.login),
+              title: Text(
+                "Login",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: ()=> Navigator.of(context).popAndPushNamed(Login.routeName),
+              minLeadingWidth: 20.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.app_registration),
+              title: Text(
+                "Sign up",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => Navigator.of(context).popAndPushNamed(Registration_seller.routeName),
+              minLeadingWidth: 20.0,
+            ),
+            Divider(color: Colors.grey),
+            ListTile(
+              leading: Icon(Icons.question_mark),
+              title: Text(
+                "About Us",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => print('Login clicked'),
+              minLeadingWidth: 20.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.contact_mail),
+              title: Text(
+                "Contact US",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => print('Login clicked'),
+              minLeadingWidth: 20.0,
+            ),
+            ListTile(
+              leading: Icon(Icons.close),
+              title: Text(
+                "Exit",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => print('Login clicked'),
+              minLeadingWidth: 20.0,
+            ),
           ],
-
         ),
-
       ),
-    ));
+      body: Center(
+        //alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //header
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 10.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Text(
+                    //   "Shopice",
+                    //   style: GoogleFonts.poppins(
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: 23.0,
+                    //     color: const Color(0xff4E8489),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+              //list of sellers
+              Column(
+                children: sellers
+                    .map((e) => SellerItem(
+                          seller: e,
+                          backgroundColor:
+                              sellerItemBackgroundColor[sellers.indexOf(e) % 4],
+                        ))
+                    .toList(),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -43,9 +43,17 @@ class ServerHandler {
         products.add(Product.fromMap(m));
       }
 
-
       return products;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
 
+  void getProductInteraction(int interaction, String name, int sellerId) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/gen/interaction.php?interaction_count=$interaction&name=$name&seller_id=$sellerId'));
     } catch (e) {
       print("Server Handler : error : $e");
       rethrow;

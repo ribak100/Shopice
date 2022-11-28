@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/server_handler.dart';
 
 import '../models/product.dart';
 import '../utility/colors.dart';
@@ -17,9 +18,21 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int interact;
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .pushNamed(ProductScreenDetails.routeName, arguments: product, ),
+      onTap: () => {
+        Navigator.of(context).pushNamed(
+          ProductScreenDetails.routeName,
+          arguments: product,
+        ),
+        interact = product.interactionCount!,
+        interact +=1,
+        ServerHandler().getProductInteraction(
+            interact, product.name!, product.sellerId!),
+        print("product name = ${product.name!}"),
+        print("interaction = ${interact}"),
+        print("sellerID = ${product.sellerId!}"),
+      },
       child: Column(
         //image section
 
