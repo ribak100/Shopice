@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   var map = Map<String, dynamic>();
-  var mapResponse = Map<String, dynamic>();
+  var mapResponseLogin = Map<String, dynamic>();
   var jsonResponse;
 
   Login({Key? key}) : super(key: key);
@@ -96,17 +96,18 @@ class Login extends StatelessWidget {
                 if (response.statusCode == 200) {
                    jsonResponse = jsonDecode(response.body)['seller'];
 
-                   mapResponse['name'] = jsonResponse['name'];
-                   mapResponse['email'] = jsonResponse['email'];
-                   mapResponse['image'] = jsonResponse['image'];
-                   mapResponse['id'] = jsonResponse['id'];
-                   mapResponse['address'] = jsonResponse['address'];
-                   mapResponse['description'] = jsonResponse['description'];
+                   mapResponseLogin['name'] = jsonResponse['name'];
+                   mapResponseLogin['email'] = jsonResponse['email'];
+                   mapResponseLogin['image'] = jsonResponse['image'];
+                   mapResponseLogin['id'] = jsonResponse['id'];
+                   mapResponseLogin['address'] = jsonResponse['address'];
+                   mapResponseLogin['description'] = jsonResponse['description'];
 
-                  print( mapResponse['name']);
+                  print( mapResponseLogin['name']);
                   print(response.body);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProduct(receivedMap: mapResponseLogin,)));
                 }
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProduct(receivedMap: mapResponse,)));
+
               },
               color: Color(0xff4A777A),
               child: Text(

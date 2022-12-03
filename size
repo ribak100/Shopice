@@ -1,0 +1,35 @@
+[33mcommit 8bc58dd2d19eef6ec4795a7bbbb743ee501768a7[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Mon Nov 28 21:10:37 2022 +0100
+
+    about to implement View products function!
+
+[33mcommit 970ab2d33bee7a9124b85d0ed92500aa26f5f569[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Sat Oct 1 15:32:45 2022 +0100
+
+    ABout to add interaction count
+
+[33mcommit ddfd95455c1b78c57ad9e9d6119d7cc2cbcf33bb[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Sat Oct 1 07:58:52 2022 +0100
+
+    about to add MOST POPULAR
+
+[33mcommit 3eca18304519bce13305d63a8e63e533259bfe86[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Thu Sep 22 03:08:38 2022 +0100
+
+    Building Product detail screeen, this is where RIshav stopped
+
+[33mcommit c83ec4280d35bf96d7dac6d9d512e27ddffb4772[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Wed Sep 21 23:55:55 2022 +0100
+
+    Product Item Screen Added and price also added to it
+
+[33mcommit 3c43139b025163d26d9648c5fa639313e55eadb2[m
+Author: unknown <adekanyekabir@gmail.com>
+Date:   Mon Sep 19 18:30:21 2022 +0100
+
+    Added both splash and sellers screen successfully

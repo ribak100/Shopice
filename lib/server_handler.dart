@@ -59,4 +59,26 @@ class ServerHandler {
       rethrow;
     }
   }
+
+  Future<String> editProduct(int sellerId, String image, String name, int price_per_kg, String description) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/seller/editProduct?seller_id=$sellerId&image=$image&name=$name&price_per_kg=price_per_kg&description=$description'));
+   return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  Future<String> deleteProduct(int sellerId, String image) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/seller/deleteProduct?seller_id=$sellerId&image=$image'));
+   return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
 }

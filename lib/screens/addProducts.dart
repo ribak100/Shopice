@@ -11,11 +11,15 @@ import 'package:http/http.dart' as http;
 
 import '../models/seller.dart';
 import '../utility/removeBg.dart';
+import '../screens/viewProducts.dart';
 
 class AddProduct extends StatefulWidget {
   //static const routeName = '/addProduct-screen';
   final Map<String, dynamic> receivedMap;
-  const AddProduct({Key? key, required this.receivedMap}) : super(key: key);
+
+
+
+   const AddProduct({Key? key, required this.receivedMap}) : super(key: key);
 
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -63,6 +67,7 @@ class _AddProductState extends State<AddProduct> {
         return Wrap(children: [ListTile(leading: Icon(Icons.done_outline), title: Text('ERROR WHILE PERFORMING OPPERATION\n CONTACT SUPPORT'),)],);
       });
     }
+
   }
 
 
@@ -82,6 +87,13 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    var mapResponse = Map<String, dynamic>();
+    mapResponse['name'] = widget.receivedMap['name'];
+    mapResponse['email'] = widget.receivedMap['email'];
+    mapResponse['image'] = widget.receivedMap['image'];
+    mapResponse['id'] = widget.receivedMap['id'];
+    mapResponse['address'] = widget.receivedMap['address'];
+    mapResponse['description'] = widget.receivedMap['description'];
     //jsonResponse = response.body)['seller'];
     //var jsonResponse = jsonDecode(ModalRoute.of(context)?.settings.arguments)['seller'];
     return Scaffold(
@@ -123,13 +135,17 @@ class _AddProductState extends State<AddProduct> {
                  ],
                ),
             ),
+
             ListTile(
-              title: Text(
-                widget.receivedMap['description'],
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17.0,
-                  color: Colors.grey,
+              title: Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  widget.receivedMap['description'],
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17.0,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
               onTap: () => print('login'), //Navigator.of(context).popAndPushNamed(Registration_seller.routeName),
@@ -146,7 +162,7 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.black,
                 ),
               ),
-              onTap: () => print('Login clicked'),
+              onTap: () => Navigator.pop(context),
               minLeadingWidth: 20.0,
             ),
             ListTile(
@@ -159,7 +175,8 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.black,
                 ),
               ),
-              onTap: () => print('Login clicked'),
+
+              onTap: () =>  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewProduct(receivedMap: mapResponse,))),
               minLeadingWidth: 20.0,
             ),
 
@@ -245,6 +262,7 @@ class _AddProductState extends State<AddProduct> {
                       borderRadius: BorderRadius.circular(20)), errorText: _validateDescription ? 'Description Can\'t Be Empty' : null,),
               ),
             ),
+
             Container(
               height: 150.0,
               width: 250.0,
