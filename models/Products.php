@@ -32,11 +32,12 @@ class Product {
     public function add_product(){
         global $database;
 
-        $this->name = trim(htmlspecialchars(strip_tags($this->seller_id)));
+        $this->seller_id = trim(htmlspecialchars(strip_tags($this->seller_id)));
         $this->name = trim(htmlspecialchars(strip_tags($this->name)));
-        $this->name = trim(htmlspecialchars(strip_tags($this->image)));
-        $this->name = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
-        $this->name = trim(htmlspecialchars(strip_tags($this->description)));
+        $this->image = trim(htmlspecialchars(strip_tags($this->image)));
+        $this->price_per_kg = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
+        $this->description = trim(htmlspecialchars(strip_tags($this->description)));
+        //$this->interaction_count = trim(htmlspecialchars(strip_tags($this->interaction_count)));
 
         $sql = "INSERT INTO $this->table (seller_id, name, image, price_per_kg, description) VALUEs (
             '" .$database->escape_value($this->seller_id). "',
@@ -69,6 +70,45 @@ class Product {
         return $database->fetch_array($result);
 
     }
+
+     //method to increase interaction
+     public function interaction($intern_count, $product_name, $seller_id_product)
+     {
+         global $database;
+         $this->interaction_count = trim(htmlspecialchars(strip_tags($this->interaction_count)));
+         $this->seller_id = trim(htmlspecialchars(strip_tags($this->seller_id)));
+ 
+         $sql = "UPDATE products SET interaction_count = $intern_count WHERE seller_id = $seller_id_product AND name = '$product_name' ";
+ 
+         $database->query($sql);
+ 
+     }
+
+     //method to edit product details
+     public function editProduct($seller_id, $image, $newName, $newPrice_per_kg, $newDescription)
+     {
+         global $database;
+         //$this->name = trim(htmlspecialchars(strip_tags($this->name)));
+         $this->price_per_kg = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
+         $this->description = trim(htmlspecialchars(strip_tags($this->description)));
+ 
+         $sql = "UPDATE products SET name = '$newName', price_per_kg = $newPrice_per_kg, description = '$newDescription' WHERE seller_id = $seller_id AND image = '$image' ";
+ 
+         $database->query($sql);
+ 
+     }
+ 
+       //method to edit product details
+       public function deleteProduct($seller_id, $image)
+       {
+           global $database;
+   
+           $sql = "DELETE FROM products WHERE seller_id = $seller_id AND image = '$image' ";
+   
+           $database->query($sql);
+   
+       }
+   
 
 }
 

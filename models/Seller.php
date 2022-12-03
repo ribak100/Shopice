@@ -16,6 +16,7 @@ class Seller{
     public $image;
     public $address;
     public $description;
+    public $rating;
 
 
     //constructor
@@ -93,6 +94,7 @@ class Seller{
         else{
             if(Bcrypt::checkPassword($this->password, $seller['password'])){
                 unset($seller['password']);
+
                 return $seller;
             }
             else{
@@ -106,11 +108,20 @@ class Seller{
     public function all_sellers(){
         global $database;
 
-        $sql = "SELECT id, name, image, address FROM $this->table";
+        $sql = "SELECT id, name, image, address, description FROM $this->table";
 
         $result = $database->query($sql);
 
         return $database->fetch_array($result);
+    }
+    
+    public function seller_description($sellerId){
+        global $database;
+        $this->id = trim(htmlspecialchars(strip_tags($this->id)));
+
+        $sql = "SELECT description FROM sellers WHERE id = $sellerId";
+
+        echo json_encode($database->query($sql));
     }
 
 }
