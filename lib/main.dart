@@ -8,7 +8,8 @@ import './screens/login.dart';
 import './screens/registration_seller.dart';
 import './screens/viewProducts.dart';
 import './screens/addProducts.dart';
-
+import './screens/registration_buyer.dart';
+import './screens/loginBuyer.dart';
 
 void main() => runApp(const MyApp());
 
@@ -32,7 +33,9 @@ class MyApp extends StatelessWidget {
         ProductScreen.routeName: (_) => const ProductScreen(),
         ProductScreenDetails.routeName: (_) => const ProductScreenDetails(),
         Login.routeName: (_) =>  Login(),
+        LoginBuyer.routeName: (_) =>  LoginBuyer(),
         Registration_seller.routeName: (_) => const Registration_seller(),
+        Registration_buyer.routeName: (_) => const Registration_buyer(),
         //ViewProduct.routeName: (_) => const ViewProduct(),
 
        // AddProduct.routeName: (_) => const AddProduct(),

@@ -232,7 +232,7 @@ class _ViewProductItemState extends State<ViewProductItem> {
                                               widget.product.image!,
                                               nameController.text,
                                               int.parse(priceController.text),
-                                              descriptionController.text!);
+                                              descriptionController.text);
                                       print(response);
                                       setState(() {});
                                       if (response == 'success') {

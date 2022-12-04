@@ -6,6 +6,8 @@ import '../models/seller.dart';
 import '../widgets/seller_item.dart';
 import './login.dart';
 import './registration_seller.dart';
+import './registration_buyer.dart';
+import './loginBuyer.dart';
 
 class SellersScreen extends StatefulWidget {
   static const routeName = '/sellers_screen';
@@ -32,7 +34,10 @@ class _SellersScreenState extends State<SellersScreen> {
   @override
   Widget build(BuildContext context) {
     List<Seller> sellers =
-        ModalRoute.of(context)?.settings.arguments as List<Seller>;
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as List<Seller>;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -72,7 +77,7 @@ class _SellersScreenState extends State<SellersScreen> {
                   color: Colors.black,
                 ),
               ),
-              onTap: ()=> Navigator.of(context).popAndPushNamed(Login.routeName),
+              onTap: ()=> Navigator.of(context).popAndPushNamed(LoginBuyer.routeName),
               minLeadingWidth: 20.0,
             ),
             ListTile(
@@ -85,7 +90,9 @@ class _SellersScreenState extends State<SellersScreen> {
                   color: Colors.black,
                 ),
               ),
-              onTap: () => Navigator.of(context).popAndPushNamed(Registration_seller.routeName),
+              onTap: () =>
+                  Navigator.of(context).popAndPushNamed(
+                      Registration_buyer.routeName),
               minLeadingWidth: 20.0,
             ),
             Divider(color: Colors.grey),
@@ -159,11 +166,12 @@ class _SellersScreenState extends State<SellersScreen> {
               //list of sellers
               Column(
                 children: sellers
-                    .map((e) => SellerItem(
-                          seller: e,
-                          backgroundColor:
-                              sellerItemBackgroundColor[sellers.indexOf(e) % 4],
-                        ))
+                    .map((e) =>
+                    SellerItem(
+                      seller: e,
+                      backgroundColor:
+                      sellerItemBackgroundColor[sellers.indexOf(e) % 4],
+                    ))
                     .toList(),
               )
             ],

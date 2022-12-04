@@ -7,17 +7,17 @@ import 'package:http/http.dart' as http;
 
 import '../models/seller.dart';
 import '../screens/addProducts.dart';
-import '../screens/loginBuyer.dart';
+import '../screens/Login.dart';
 
-class Login extends StatelessWidget {
-  static const routeName = '/login-screen';
+class LoginBuyer extends StatelessWidget {
+  static const routeName = '/LoginBuyer-screen';
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   var map = Map<String, dynamic>();
-  var mapResponseLogin = Map<String, dynamic>();
+  var mapResponseLoginBuyer = Map<String, dynamic>();
   var jsonResponse;
 
-  Login({Key? key}) : super(key: key);
+  LoginBuyer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +83,13 @@ class Login extends StatelessWidget {
                       PopupMenuItem(
                         child: Text("Seller"),
                         value: 1,
-                        enabled: false,
+
 
                       ),
                       PopupMenuItem(
                         child: Text("Buyer"),
                         value: 2,
-
+                        enabled: false,
                       ),
                     ]),
                   ),
@@ -127,10 +127,10 @@ class Login extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () async {
-                 map['email'] = emailController.text;
-                 map['password'] = passwordController.text;
+                map['email'] = emailController.text;
+                map['password'] = passwordController.text;
                 final response = await http.post(
-                  Uri.parse('http://10.0.2.2://shopice/api/seller/login'), body: map,
+                  Uri.parse('http://10.0.2.2://shopice/api/buyer/login'), body: map,
                 );
                 showModalBottomSheet(
                     context: context,
@@ -139,18 +139,17 @@ class Login extends StatelessWidget {
                     });
 
                 if (response.statusCode == 200) {
-                   jsonResponse = jsonDecode(response.body)['seller'];
+                  jsonResponse = jsonDecode(response.body)['buyer'];
 
-                   mapResponseLogin['name'] = jsonResponse['name'];
-                   mapResponseLogin['email'] = jsonResponse['email'];
-                   mapResponseLogin['image'] = jsonResponse['image'];
-                   mapResponseLogin['id'] = jsonResponse['id'];
-                   mapResponseLogin['address'] = jsonResponse['address'];
-                   mapResponseLogin['description'] = jsonResponse['description'];
+                  mapResponseLoginBuyer['name'] = jsonResponse['name'];
+                  mapResponseLoginBuyer['email'] = jsonResponse['email'];
+                  mapResponseLoginBuyer['image'] = jsonResponse['image'];
+                  mapResponseLoginBuyer['id'] = jsonResponse['id'];
+                  mapResponseLoginBuyer['address'] = jsonResponse['address'];
 
-                  print( mapResponseLogin['name']);
+                  print( mapResponseLoginBuyer['name']);
                   print(response.body);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProduct(receivedMap: mapResponseLogin,)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProduct(receivedMap: mapResponseLoginBuyer,)));
                 }
 
               },
