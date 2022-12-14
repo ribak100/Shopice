@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/screens/sellers_screen.dart';
 
 import '../models/seller.dart';
 import '../screens/porduct_screen.dart';
@@ -10,18 +11,30 @@ class SellerItem extends StatelessWidget {
   final Seller seller;
   final Color backgroundColor;
   final rating = 4;
+  final Map<String, dynamic> receivedMap;
 
   const SellerItem({
     Key? key,
     required this.seller,
-    required this.backgroundColor,
+    required this.backgroundColor, required this.receivedMap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+    var mapResponse = Map<String, dynamic>();
+    mapResponse['id'] = args.receivedMap['id'];
+    mapResponse['name'] = args.receivedMap['name'];
+    mapResponse['email'] = args.receivedMap['email'];
+    mapResponse['image'] = args.receivedMap['image'];
+    mapResponse['address'] = args.receivedMap['address'];
+    List<Seller> sellers = args.seller.cast<Seller>() ;
     return GestureDetector(
-      onTap: () => Navigator.of(context)
-          .pushNamed(ProductScreen.routeName, arguments: seller),
+      onTap: () {
+        print(mapResponse);
+        Navigator
+            .pushNamed(context, '/product-screen', arguments: ProductScreenArguments(seller , mapResponse) )as ProductScreenArguments;
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(
           vertical: 15.0,

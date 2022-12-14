@@ -57,6 +57,7 @@ class _AddProductState extends State<AddProduct> {
     request.files.add(pic);
     var response = await request.send();
 
+
     if (response.statusCode == 200) {
       showModalBottomSheet(context: context, builder: (context){
         return Wrap(children: [ListTile(leading: Icon(Icons.done_outline), title: Text('PRODUCT UPLOADED SUCCESSFULLY'),)],);

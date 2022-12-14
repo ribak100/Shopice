@@ -6,18 +6,33 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/seller.dart';
+import '../screens/splash_screen.dart';
 import '../screens/addProducts.dart';
 import '../screens/Login.dart';
 
-class LoginBuyer extends StatelessWidget {
+class LoginBuyer extends StatefulWidget {
   static const routeName = '/LoginBuyer-screen';
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  var map = Map<String, dynamic>();
-  var mapResponseLoginBuyer = Map<String, dynamic>();
-  var jsonResponse;
 
   LoginBuyer({Key? key}) : super(key: key);
+
+  @override
+  State<LoginBuyer> createState() => _LoginBuyerState();
+}
+
+class _LoginBuyerState extends State<LoginBuyer> {
+  TextEditingController emailController = new TextEditingController();
+
+  TextEditingController passwordController = new TextEditingController();
+
+  var map = Map<String, dynamic>();
+
+  var mapResponseLoginBuyer = Map<String, dynamic>();
+
+  var jsonResponse;
+
+  bool _validateEmail = false;
+
+  bool _validatePassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +119,7 @@ class LoginBuyer extends StatelessWidget {
                 controller: emailController,
                 decoration: InputDecoration(
                     labelText: 'Email',
+                    errorText: _validateEmail ? "'Email Can\'t Be Empty'": null,
                     labelStyle: TextStyle(color: Color(0xff4A777A)),
                     prefixIcon: Icon(Icons.person),
                     enabledBorder: OutlineInputBorder(
@@ -118,6 +134,7 @@ class LoginBuyer extends StatelessWidget {
                 controller: passwordController,
                 decoration: InputDecoration(
                     labelText: 'Password',
+                    errorText: _validatePassword ? "Password Cant\'t Be Empty" : null,
                     labelStyle: TextStyle(color: Color(0xff4A777A)),
                     prefixIcon: Icon(Icons.key),
                     enabledBorder: OutlineInputBorder(
@@ -127,16 +144,22 @@ class LoginBuyer extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () async {
+                setState(() {
+
+                  emailController.text.isEmpty ? _validateEmail = true : _validateEmail = false;
+                  passwordController.text.isEmpty ? _validatePassword = true : _validatePassword = false;
+                });
+
                 map['email'] = emailController.text;
                 map['password'] = passwordController.text;
                 final response = await http.post(
                   Uri.parse('http://10.0.2.2://shopice/api/buyer/login'), body: map,
                 );
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Text(response.body);
-                    });
+                // showModalBottomSheet(
+                //     context: context,
+                //     builder: (context) {
+                //       return Text(response.body);
+                //     });
 
                 if (response.statusCode == 200) {
                   jsonResponse = jsonDecode(response.body)['buyer'];
@@ -149,7 +172,17 @@ class LoginBuyer extends StatelessWidget {
 
                   print( mapResponseLoginBuyer['name']);
                   print(response.body);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProduct(receivedMap: mapResponseLoginBuyer,)));
+                  var snackbar = SnackBar(
+                    content: Text('Login Successful!',
+                        style: TextStyle(fontSize: 20.0)),
+                    backgroundColor:
+                    const Color(0xff4A777A),
+                    padding: EdgeInsets.only(left: 50.0),
+                  );
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(snackbar);
+                  Future.delayed(Duration(seconds: 4));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SplashScreen(receivedMap: mapResponseLoginBuyer,)));
                 }
 
               },

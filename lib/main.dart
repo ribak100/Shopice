@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopice/screens/cart.dart';
 
 import './screens/splash_screen.dart';
 import './screens/sellers_screen.dart';
@@ -21,12 +22,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Shopice',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(),
+      home: SplashScreen(receivedMap: {},),
 
       routes: {
         SellersScreen.routeName: (_) => const SellersScreen(),
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         LoginBuyer.routeName: (_) =>  LoginBuyer(),
         Registration_seller.routeName: (_) => const Registration_seller(),
         Registration_buyer.routeName: (_) => const Registration_buyer(),
+        Cart.routeName: (_) => const Cart(),
         //ViewProduct.routeName: (_) => const ViewProduct(),
 
        // AddProduct.routeName: (_) => const AddProduct(),

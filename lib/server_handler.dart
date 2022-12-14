@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import './models/seller.dart';
 import './models/product.dart';
+import './models/cartModel.dart';
 
 class ServerHandler {
   final String _baseUrl = "http://10.0.2.2:/shopice/api";
@@ -76,6 +77,28 @@ class ServerHandler {
       http.Response response = await http.get(Uri.parse(
           '$_baseUrl/seller/deleteProduct?seller_id=$sellerId&image=$image'));
    return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+
+  Future<List<CartModel>> getCart(int buyerId) async {
+    try {
+
+
+      final response = await http.get(Uri.parse(
+          'http://10.0.2.2://shopice/api/buyer/getCart?buyer_id=$buyerId'));
+
+
+
+      List<CartModel> cartModelList = (json.decode(response.body)['Cart Products'] as List)
+              .map((data) => CartModel.fromJson(data))
+              .toList();
+
+      return cartModelList;
     } catch (e) {
       print("Server Handler : error : $e");
       rethrow;

@@ -38,6 +38,7 @@ class _Registration_sellerState extends State<Registration_seller> {
 
   Future ChoiceImage() async {
     var pickedImage = await picker.getImage(source: ImageSource.gallery);
+
     setState(() {
       _image = File(pickedImage!.path);
     });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/models/buyer.dart';
 
 import '../models/product.dart';
 import '../utility/colors.dart';
@@ -10,18 +11,16 @@ import '../screens/product_detail_screen.dart';
 class MostPopular extends StatelessWidget {
   final Product product;
   final int productIndex;
-
+  final Seller seller;
+  final Map<String, dynamic> receivedMap;
   const MostPopular(
-      {Key? key, required this.product, required this.productIndex})
+      {Key? key, required this.product, required this.productIndex, required this.seller, required this.receivedMap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(
-        ProductScreenDetails.routeName,
-        arguments: product,
-      ),
+      onTap: () => Navigator.pushNamed(context, '/product-detaail-screen', arguments: DetailProduct(product, seller, receivedMap)) as DetailProduct,
       child: Column(
         //image section
 

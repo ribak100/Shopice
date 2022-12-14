@@ -8,7 +8,9 @@ import '../server_handler.dart';
 import '../screens/sellers_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key? key, required this.receivedMap}) : super(key: key);
+  static const routeName = '/LoginBuyer-screen';
+  final Map<String, dynamic> receivedMap;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -30,11 +32,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       spawnMinSpeed: 30,
       spawnMinRadius: 7.0);
 
-  void getSellers() {
+  void getSellers(){
     ServerHandler()
         .getSellers()
-        .then((value) => Navigator.of(context)
-            .popAndPushNamed(SellersScreen.routeName, arguments: value))
+        .then((value) => Navigator
+          .pushNamed(context, '/sellers_screen', arguments: ScreenArguments(value,
+        widget.receivedMap
+    )))
         .catchError((e) => print(e));
   }
 
@@ -99,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 Padding(
                   padding: const EdgeInsets.only(top: 7.0),
                   child: Text(
-                    'Loading Sellers',
+                    'Loading',
                     style: GoogleFonts.poppins(),
                   ),
                 ),

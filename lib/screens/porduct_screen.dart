@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/screens/cart.dart';
 
 import '../server_handler.dart';
 import '../models/seller.dart';
+import '../models/buyer.dart';
 import '../models/product.dart';
 import '../widgets/product_item.dart';
 import '../widgets/most_popular.dart';
 import '../screens/sellers_screen.dart';
 
+class ProductScreenArguments{
+  final Seller seller;
+  late final Map<String, dynamic> receivedMap;
+
+
+  ProductScreenArguments(this.seller
+      ,this.receivedMap
+      );
+}
+
 class ProductScreen extends StatefulWidget {
   static const routeName = '/product-screen';
+
 
   const ProductScreen({Key? key}) : super(key: key);
 
@@ -22,7 +35,6 @@ class _ProductScreenState extends State<ProductScreen> {
   List<Product> _products = [];
   late int interact;
   final int rating = 4;
-
   bool _firstExec = true;
 
   void getProductsPerSeller(int sellerId) {
@@ -66,10 +78,12 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Seller seller = ModalRoute.of(context)!.settings.arguments as Seller;
+    final args = ModalRoute.of(context)!.settings.arguments as ProductScreenArguments;
+
+
     int count = 4;
     if (_firstExec == true) {
-      getProductsPerSeller(seller.id!);
+      getProductsPerSeller(args.seller.id!);
       _firstExec = false;
     }
     return Scaffold(
@@ -94,17 +108,27 @@ class _ProductScreenState extends State<ProductScreen> {
                           color: const Color(0xff4E8489),
                         ),
                       ),
+                      if(args.receivedMap['image'] == null)
                       Container(
                         height: 45.0,
                         width: 45.0,
                         decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "http://10.0.2.2:/shopice/assets/${seller.image!}" ),
-                                fit: BoxFit.fitWidth),
                             shape: BoxShape.circle,
                             color: Colors.grey),
                       )
+                      else if(args.receivedMap['image'] != null)
+                        Container(
+                          height: 45.0,
+                          width: 45.0,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
+                                  fit: BoxFit.fitWidth),
+                              shape: BoxShape.circle,
+                              color: Colors.grey),
+                        )
+
                     ],
                   ),
                 ),
@@ -148,7 +172,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       itemCount: _products.length,
                       itemBuilder: (context, index) => ProductItem(
                         product: _products[index],
-                        productIndex: index,
+                        productIndex: index, seller: args.seller, receivedMap: args.receivedMap,
                       ),
                     ),
                   ),
@@ -178,7 +202,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       itemCount: _products.length,
                       itemBuilder: (context, index) => MostPopular(
                         product: _products[getInteractions() -index],
-                        productIndex: index ,
+                        productIndex: index , seller: args.seller ,receivedMap: args.receivedMap,
                       ),
                     ),
                   ),
@@ -194,7 +218,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       itemCount: count,
                       itemBuilder: (context, index) => MostPopular(
                         product: _products[getInteractions() - index],
-                        productIndex: index,
+                        productIndex: index, seller: args.seller, receivedMap: args.receivedMap
                       ),
                     ),
                   ),
@@ -256,7 +280,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             image: NetworkImage(
-                                                "http://10.0.2.2:/shopice/assets/${seller.image!}"),
+                                                "http://10.0.2.2:/shopice/assets/${args.seller.image}" ),
                                             fit: BoxFit.fitWidth),
                                         shape: BoxShape.circle,
                                         color: Colors.grey),
@@ -264,7 +288,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 10.0, right: 0.0, top: 5.0),
-                                    child: Text(seller.name!,
+                                    child: Text(args.seller.name!,
                                         textAlign: TextAlign.start,
                                         style: GoogleFonts.poppins(
                                           color: const Color(0xff4E8489),
@@ -350,7 +374,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 33.0, bottom: 5),
-                                child: Text(seller.description as String,
+                                child: Text(args.seller.description as String,
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
@@ -378,7 +402,10 @@ class _ProductScreenState extends State<ProductScreen> {
                       onPressed: () => print('Icon buton pressed'),
                       icon: Icon((Icons.search))),
                   IconButton(
-                      onPressed: () => print('Icon buton pressed'),
+                      onPressed: () => Navigator
+                          .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap
+                      )as CartArguments
+                      ),
                       icon: Icon((Icons.shopping_cart_sharp))),
                   IconButton(
                       onPressed: () => print('Icon buton pressed'),

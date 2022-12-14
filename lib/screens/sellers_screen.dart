@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopice/screens/sellers_screen.dart';
 
 import '../models/seller.dart';
 import '../widgets/seller_item.dart';
@@ -9,17 +11,41 @@ import './registration_seller.dart';
 import './registration_buyer.dart';
 import './loginBuyer.dart';
 
+class ScreenArguments{
+  List<Seller> seller;
+  late final Map<String, dynamic> receivedMap;
+
+
+  ScreenArguments(this.seller
+  ,this.receivedMap
+      );
+}
+
 class SellersScreen extends StatefulWidget {
   static const routeName = '/sellers_screen';
+
 
   const SellersScreen({Key? key}) : super(key: key);
 
   @override
   State<SellersScreen> createState() => _SellersScreenState();
 }
+//
+// class RouteGenerator{
+//   static Route<dynamic> generateRoute(RouteSettings settings){
+//     final args = settings.arguments;
+//     switch(settings.name){
+//       case '/sellers_screen':
+//         return CupertinoPageRoute(builder: (BuildContext context){
+//           ScreenArguments arguments = args;
+//         });
+//     }
+//   }
+// }
 
 class _SellersScreenState extends State<SellersScreen> {
   List<Color> sellerItemBackgroundColor = [];
+
 
   @override
   void initState() {
@@ -33,11 +59,14 @@ class _SellersScreenState extends State<SellersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Seller> sellers =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as List<Seller>;
+  final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+  var mapResponse = Map<String, dynamic>();
+  mapResponse['id'] = args.receivedMap['id'];
+  mapResponse['name'] = args.receivedMap['name'];
+  mapResponse['email'] = args.receivedMap['email'];
+  mapResponse['image'] = args.receivedMap['image'];
+  mapResponse['address'] = args.receivedMap['address'];
+    List<Seller> sellers = args.seller;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -170,8 +199,9 @@ class _SellersScreenState extends State<SellersScreen> {
                     SellerItem(
                       seller: e,
                       backgroundColor:
-                      sellerItemBackgroundColor[sellers.indexOf(e) % 4],
-                    ))
+                      sellerItemBackgroundColor[sellers.indexOf(e) % 4], receivedMap: mapResponse,
+                    )
+                )
                     .toList(),
               )
             ],
