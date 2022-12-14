@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($seller->check_unique_email()){
         if ($id = $seller->register_seller()){
+            http_response_code(200);
             echo json_encode(array('success' => 1, 'message' => 'Seller registered'));
         }
         else{

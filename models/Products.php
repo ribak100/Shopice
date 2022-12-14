@@ -98,7 +98,7 @@ class Product {
  
      }
  
-       //method to edit product details
+       //method to delete details
        public function deleteProduct($seller_id, $image)
        {
            global $database;
