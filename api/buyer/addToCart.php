@@ -68,6 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cart_images_folder = '../../assets/cart_images/' ;
     $product_images_folder = '../../assets/product_images/';
 
+    if (!is_dir($cart_images_folder)){
+        mkdir($cart_images_folder);
+    }
+
+
 
     if($cart->validate_params($_POST['image'])){
         $source_file = '../../assets/' . $_POST['image']; 
@@ -83,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         else{
             print("\ninvalid DIr");
         }
-        print("\nDestination" . $destination);
-        print("\nSource file" . $source_file);
+        // print("\nDestination" . $destination);
+        // print("\nSource file" . $source_file);
 
     }
     else{
