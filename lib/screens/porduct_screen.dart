@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopice/screens/cart.dart';
 
 import '../server_handler.dart';
 import '../models/seller.dart';
-import '../models/buyer.dart';
 import '../models/product.dart';
 import '../widgets/product_item.dart';
 import '../widgets/most_popular.dart';
-import '../screens/sellers_screen.dart';
+import '../screens/cart.dart';
+import '../screens/profile.dart';
 
 class ProductScreenArguments{
   final Seller seller;
@@ -124,7 +123,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               image: DecorationImage(
                                   image: NetworkImage(
                                       "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
-                                  fit: BoxFit.fitWidth),
+                                  fit: BoxFit.cover),
                               shape: BoxShape.circle,
                               color: Colors.grey),
                         )
@@ -403,7 +402,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       icon: Icon((Icons.search))),
                   IconButton(
                       onPressed: () => Navigator
-                          .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap
+                          .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap, args.seller
                       )as CartArguments
                       ),
                       icon: Icon((Icons.shopping_cart_sharp))),
@@ -411,7 +410,27 @@ class _ProductScreenState extends State<ProductScreen> {
                       onPressed: () => print('Icon buton pressed'),
                       icon: Icon((Icons.menu))),
                   IconButton(
-                      onPressed: () => print('Icon buton pressed'),
+                      onPressed: () {
+                        if(args.receivedMap['name'] == null){
+                          var snackbar = SnackBar(
+                            content: Text(
+                                "Login To View Profile",
+                                style: TextStyle(fontSize: 20.0)),
+                            backgroundColor:
+                            const Color(0xff4A777A),
+                            padding: EdgeInsets.only(left: 50.0),
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackbar);
+
+                        }
+                        else{
+                          Navigator
+                              .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
+                          )
+                          );
+                        }
+                        },
                       icon: Icon((Icons.person_outline))),
                 ],
               ),

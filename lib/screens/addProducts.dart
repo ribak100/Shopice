@@ -12,6 +12,9 @@ import 'package:http/http.dart' as http;
 import '../models/seller.dart';
 import '../utility/removeBg.dart';
 import '../screens/viewProducts.dart';
+import '../screens/availableOrder.dart';
+import '../screens/shippedOrder.dart';
+import '../screens/completedOrder.dart';
 
 class AddProduct extends StatefulWidget {
   //static const routeName = '/addProduct-screen';
@@ -95,8 +98,7 @@ class _AddProductState extends State<AddProduct> {
     mapResponse['id'] = widget.receivedMap['id'];
     mapResponse['address'] = widget.receivedMap['address'];
     mapResponse['description'] = widget.receivedMap['description'];
-    //jsonResponse = response.body)['seller'];
-    //var jsonResponse = jsonDecode(ModalRoute.of(context)?.settings.arguments)['seller'];
+
     return Scaffold(
       backgroundColor: Color(0xffE6F3EC),
       appBar: AppBar(
@@ -118,8 +120,8 @@ class _AddProductState extends State<AddProduct> {
                child: Column(
                  children: [
                    Container(
-                      height: 112.0,
-                      width: 112.0,
+                      height: 102.0,
+                      width: 102.0,
                       decoration: BoxDecoration(
                           image: DecorationImage(
                               image: NetworkImage(
@@ -144,7 +146,7 @@ class _AddProductState extends State<AddProduct> {
                   widget.receivedMap['description'],
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
-                    fontSize: 17.0,
+                    fontSize: 15.0,
                     color: Colors.grey,
                   ),
                 ),
@@ -191,9 +193,38 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.black,
                 ),
               ),
-              onTap: () => print('Login clicked'),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AvailableOrder(receivedMap: mapResponse,))),
               minLeadingWidth: 20.0,
             ),
+
+            ListTile(
+              leading: Icon(Icons.local_shipping),
+              title: Text(
+                "Shipped Products",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShippedOrder(receivedMap: mapResponse,))),
+              minLeadingWidth: 20.0,
+            ),
+
+            ListTile(
+              leading: Icon(Icons.library_add_check),
+              title: Text(
+                "Completed Orders",
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17.0,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CompletedOrder(receivedMap: mapResponse,))),
+              minLeadingWidth: 20.0,
+            ),
+
             ListTile(
               leading: Icon(Icons.close),
               title: Text(
@@ -204,7 +235,7 @@ class _AddProductState extends State<AddProduct> {
                   color: Colors.black,
                 ),
               ),
-              onTap: () => print('Login clicked'),
+              onTap: () => Navigator.of(context).pop(),
               minLeadingWidth: 20.0,
             ),
           ],

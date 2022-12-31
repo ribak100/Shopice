@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:uri_to_file/uri_to_file.dart';
-import 'dart:io';
-import 'package:http_parser/http_parser.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shopice/models/buyer.dart';
-import 'package:shopice/screens/cart.dart';
-import 'package:shopice/screens/product_detail_screen.dart';
-import 'package:shopice/screens/sellers_screen.dart';
-import 'package:shopice/server_handler.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 
-import 'package:shopice/widgets/product_item.dart';
 import '../models/seller.dart';
 import '../models/product.dart';
-import '../screens/sellers_screen.dart';
+import '../screens/cart.dart';
+import '../screens/profile.dart';
+
 
 class DetailProduct {
   late final Product product;
@@ -447,14 +436,18 @@ class _ProductScreenDetailsState extends State<ProductScreenDetails> {
                       IconButton(
                           onPressed: () => Navigator.pushNamed(
                               context, '/cart-screen',
-                              arguments: CartArguments(args.receivedMap)
+                              arguments: CartArguments(args.receivedMap, args.seller)
                                   as CartArguments),
                           icon: Icon((Icons.shopping_cart_sharp))),
                       IconButton(
                           onPressed: () => print('Icon buton pressed'),
                           icon: Icon((Icons.menu))),
                       IconButton(
-                          onPressed: () => print('Icon buton pressed'),
+                          onPressed: () => Navigator
+                              .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
+                          )as ProfileScreenArguments
+                          ),
+
                           icon: Icon((Icons.person_outline))),
                     ],
                   ),

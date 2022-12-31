@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shopice/models/buyer.dart';
+
 
 import './models/seller.dart';
 import './models/product.dart';
 import './models/cartModel.dart';
+import './models/buying.dart';
+import './models/priceAndCount.dart';
 
 class ServerHandler {
   final String _baseUrl = "http://10.0.2.2:/shopice/api";
@@ -84,7 +88,115 @@ class ServerHandler {
   }
 
 
+  // method to delete data from the buy table
+  Future<String> deleteFromBuy(int buyer_id, String image) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/delete?buyer_id=$buyer_id&image=$image'));
+   return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+  // method to delete data from the buy table instant
+  Future<String> deleteInstantFromBuy(int buyer_id, String buyer_name) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/deleteFresh?buyer_id=$buyer_id&buyer_name=$buyer_name'));
+   return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
 
+
+//function to get image from buy table
+  Future<String> getImage(int sellerId, int buyerId,String price, String name) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/get_image?seller_id=$sellerId&buyer_id=$buyerId&price=$price&product_name=$name'));
+
+      String image = response.body;
+      return image;
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+//function to set quantity
+  Future<String> quantity(int sellerId,String image,int buyerID, int quantity) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/quantity?seller_id=$sellerId&image=$image&buyer_id=$buyerID&quantity=$quantity'));
+
+      String setQuantity = response.body;
+      return setQuantity;
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+//function to set total_price
+  void total_price(int sellerId,String image,int buyerID, int total_price) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/total_price?seller_id=$sellerId&image=$image&buyer_id=$buyerID&total_price=$total_price'));
+
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+//function to set payment
+  Future<String> payment(int sellerId,int buyerID, String payment) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/payment?seller_id=$sellerId&buyer_id=$buyerID&payment=$payment'));
+
+      return "success";
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+//function to set shipping
+  Future<String> shipping(int sellerId,String image,int buyerID, String shipping) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/quantity?seller_id=$sellerId&image=$image&buyer_id=$buyerID&quantity=$shipping'));
+
+      return "success";
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+//function to set delivery
+  Future<String> delivery(int sellerId,String image,int buyerID, String delivery) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/quantity?seller_id=$sellerId&image=$image&buyer_id=$buyerID&quantity=$delivery'));
+
+      return "success";
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  //function to get data in cart
   Future<List<CartModel>> getCart(int buyerId) async {
     try {
 
@@ -104,4 +216,263 @@ class ServerHandler {
       rethrow;
     }
   }
+
+  //get price from buy
+  Future<List<Price>> getPrice(String buyer_name, int buyerId) async {
+    try {
+      List<Price> price = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/price?buyer_id=$buyerId&buyer_name=$buyer_name'));
+
+      List priceList = json.decode(response.body)['price'];
+
+      for (Map m in priceList) {
+        price.add(Price.fromMap(m));
+      }
+
+      return price;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //get count from buy
+  Future<List<Count>> getCount(String buyer_name, int buyerId) async {
+    try {
+      List<Count> count = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/count?buyer_id=$buyerId&buyer_name=$buyer_name'));
+
+      List countList = json.decode(response.body)['count'];
+
+      for (Map m in countList) {
+        count.add(Count.fromMap(m));
+      }
+
+      return count;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+  //get total from buy
+  Future<List<Total>> getTotalPrice(String buyer_name, int buyerId) async {
+    try {
+      List<Total> total = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/get_total_price?buyer_id=$buyerId&buyer_name=$buyer_name'));
+
+      List totalList = json.decode(response.body)['price'];
+      for (Map m in totalList) {
+        total.add(Total.fromMap(m));
+      }
+
+      return total;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  //get available product list
+  Future<List<BuyModel>> getAvailableProducts(int sellerId, String sellerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/seller/getPaidOrders?seller_id=$sellerId&seller_name=$sellerName'));
+
+      List productList = json.decode(response.body)['paid'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //get Shipped product list
+  Future<List<BuyModel>> getShippedProducts(int sellerId, String sellerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/seller/getShipped?seller_id=$sellerId&seller_name=$sellerName'));
+
+      List productList = json.decode(response.body)['shipped'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //get Delivered product list
+  Future<List<BuyModel>> getDeliveredProducts(int sellerId, String sellerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/seller/getDelivered?seller_id=$sellerId&seller_name=$sellerName'));
+
+      List productList = json.decode(response.body)['delivered'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  Future<List<Buyer>> eachBuyer(int buyerId, String buyerName) async {
+    try {
+      List<Buyer> buyer = [];
+
+      http.Response response =
+      await http.get(Uri.parse('$_baseUrl/buyer/eachBuyer?id=$buyerId&name=$buyerName'));
+
+      List buyerList = (json.decode(response.body))['buyers'];
+
+      for (Map m in buyerList) {
+        buyer.add(Buyer.fromMap(m));
+      }
+
+      return buyer;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //get pending product list
+  Future<List<BuyModel>> getPendingOrders(int buyerID, String buyerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/pending?seller_id=$buyerID&seller_name=$buyerName'));
+
+      List productList = json.decode(response.body)['paid'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //get paid product list
+  Future<List<BuyModel>> getPaidOrderBuyer(int buyerID, String buyerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/pendingShipment?seller_id=$buyerID&seller_name=$buyerName'));
+
+      List productList = json.decode(response.body)['paid'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  //get paid product list
+  Future<List<BuyModel>> getShippedOrderBuyer(int buyerID, String buyerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/shippedBuyer?seller_id=$buyerID&seller_name=$buyerName'));
+
+      List productList = json.decode(response.body)['paid'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  //get paid product list
+  Future<List<BuyModel>> getCompletedOrderBuyer(int buyerID, String buyerName) async {
+    try {
+      List<BuyModel> buyModel = [];
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/completedOrder?seller_id=$buyerID&seller_name=$buyerName'));
+
+      List productList = json.decode(response.body)['paid'];
+
+      for (Map m in productList) {
+        buyModel.add(BuyModel.fromMap(m));
+      }
+
+      print(buyModel);
+
+      return buyModel;
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+
+
+
+
+
 }
+
+
+
+
+

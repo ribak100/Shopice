@@ -7,13 +7,17 @@ import 'package:animated_background/animated_background.dart';
 import '../server_handler.dart';
 import '../screens/sellers_screen.dart';
 
+
+
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key, required this.receivedMap}) : super(key: key);
-  static const routeName = '/LoginBuyer-screen';
+  static const routeName = '/splash-screen';
   final Map<String, dynamic> receivedMap;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
+
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{

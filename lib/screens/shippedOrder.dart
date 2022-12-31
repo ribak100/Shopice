@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-
+import '../models/buying.dart';
 import '../server_handler.dart';
 import '../models/seller.dart';
 import '../models/product.dart';
-import '../widgets/viewProductItem.dart';
-import '../widgets/most_popular.dart';
-import '../screens/sellers_screen.dart';
+import '../widgets/shippedOrderItem.dart';
+import '../models/buyer.dart';
 
-class ViewProduct extends StatefulWidget {
-  static const routeName = '/viewProduct-screen';
+class ShippedOrder extends StatefulWidget {
+  static const routeName = '/shippedOrder-screen';
   final Map<String, dynamic> receivedMap;
 
-  const ViewProduct({Key? key, required this.receivedMap}) : super(key: key);
+  const ShippedOrder({Key? key, required this.receivedMap}) : super(key: key);
 
   @override
-  State<ViewProduct> createState() => _ViewProductState();
+  State<ShippedOrder> createState() => _ShippedOrderState();
 }
 
-class _ViewProductState extends State<ViewProduct> {
-  List<Product> _products = [];
+class _ShippedOrderState extends State<ShippedOrder> {
+  List<BuyModel> _buyModel = [];
   late int interact;
   final int rating = 4;
 
   bool _firstExec = true;
+  List<Buyer> _buyer = [];
 
-  void getProductsPerSeller(int sellerId) {
-    ServerHandler().getProductsPerSeller(sellerId).then((value) => {
+  void getShippedOrders(int sellerId, String sellerName) {
+    ServerHandler().getShippedProducts(sellerId, sellerName).then((value) => {
       setState(() {
-        print(value);
-        _products = value;
+        print("Value of Shipped Orders $value");
+        _buyModel = value;
       })
     });
     //.catchError((e) => print(e));
   }
+
+
 
   @override
   void setState(VoidCallback fn) {
@@ -52,9 +54,10 @@ class _ViewProductState extends State<ViewProduct> {
   @override
   Widget build(BuildContext context) {
     if (_firstExec == true) {
-      getProductsPerSeller(int.parse(widget.receivedMap['id']));
+      getShippedOrders(int.parse(widget.receivedMap['id']), widget.receivedMap['name']);
       _firstExec = false;
     }
+
     setState(() { });
     print(widget.receivedMap['id']);
     return Scaffold(
@@ -96,9 +99,9 @@ class _ViewProductState extends State<ViewProduct> {
                   ),
 
                   // Loading widget
-                  if (_products.isEmpty)
+                  if (_buyModel.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
+                      padding: const EdgeInsets.only(top: 250.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -115,7 +118,7 @@ class _ViewProductState extends State<ViewProduct> {
                           Padding(
                             padding: const EdgeInsets.only(top: 7.0),
                             child: Text(
-                              "Add Products to see available products",
+                              "No Order Shipped",
                               style: GoogleFonts.poppins(color: Colors.grey),
                             ),
                           ),
@@ -124,7 +127,7 @@ class _ViewProductState extends State<ViewProduct> {
                     ),
 
                   //List of Items
-              //setState(() { }),
+                  //setState(() { }),
 
                   Padding(
                     padding: const EdgeInsets.only(bottom: 0.0),
@@ -132,10 +135,10 @@ class _ViewProductState extends State<ViewProduct> {
                       height: 490.0,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: _products.length,
-                        itemBuilder: (context, index) => ViewProductItem(
-                          product: _products[index],
-                          productIndex: index,
+                        itemCount: _buyModel.length,
+                        itemBuilder: (context, index) => ShippedOrderItem(
+                          buyModel: _buyModel[index],
+                          buyIndex: index,
                         ),
                       ),
                     ),
@@ -146,8 +149,8 @@ class _ViewProductState extends State<ViewProduct> {
               //comment and description box
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 20.0,
-                  right: 20.0, top: 7.0
+                    left: 20.0,
+                    right: 20.0, top: 7.0, bottom: 10.0
                 ),
                 child: Column(
                   children: [

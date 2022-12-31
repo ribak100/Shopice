@@ -7,13 +7,19 @@ import 'package:shopice/screens/cart.dart';
 
 import '../server_handler.dart';
 import '../models/cartModel.dart';
+import '../models/seller.dart';
+import '../models/product.dart';
 import '../widgets/cart_item.dart';
+import '../models/priceAndCount.dart';
+import '../screens/payment.dart';
 
 class CartArguments {
   late final Map<String, dynamic> receivedMap;
+  final Seller seller;
 
-  CartArguments(this.receivedMap);
+  CartArguments(this.receivedMap, this.seller);
 }
+
 
 class Cart extends StatefulWidget {
   static const routeName = '/cart-screen';
@@ -31,6 +37,14 @@ class _CartState extends State<Cart> {
   double translateX = 0.0;
   double translateY = 0.0;
   double width = 0.0;
+  List<Price> price = [];
+  List<Count> count = [];
+  List<Price> priceTotal = [];
+  List<Count> countTotal = [];
+  int totalToPay = 0;
+  List<Total> calculatedTotal = [];
+  String buyerName = "";
+  int buyerId = -1;
 
   void getCartData(int buyerId) {
     ServerHandler().getCart(buyerId).then((value) => {
@@ -38,6 +52,45 @@ class _CartState extends State<Cart> {
             _cart = value;
           })
         });
+  }
+
+  List<Price> getPrice(String buyer_name, int buyerId) {
+    ServerHandler().getPrice(buyer_name, buyerId).then((value) => {
+          price = value.cast<Price>(),
+        });
+    //.catchError((e) => print(e));
+    return price;
+  }
+
+  List<Count> getCount(String buyer_name, int buyerId) {
+    ServerHandler().getCount(buyer_name, buyerId).then((value) => {
+          count = value.cast<Count>(),
+        });
+
+    //.catchError((e) => print(e));
+    return count;
+  }
+
+  //get total from buy
+  Future<List<Total>> getTotalPrice(String buyer_name, int buyerId) async {
+    List<Total> total = [];
+    total = await ServerHandler().getTotalPrice(buyer_name, buyerId);
+
+    return total;
+  }
+
+  int totalPrice(List<Total> total) {
+    int totalPrice = 0;
+
+    for (int i = 0; i < total.length; i++) {
+      totalPrice += int.parse((total[i].totalPrice).toString());
+    }
+
+    return totalPrice;
+  }
+
+  void totalFunction() async {
+    calculatedTotal = await getTotalPrice(buyerName, buyerId);
   }
 
   @override
@@ -55,15 +108,14 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments as CartArguments;
+    buyerName = args.receivedMap['name'];
+    buyerId = int.parse(args.receivedMap['id']);
     if (_firstExec == true) {
       _firstExec == false;
-      if(args.receivedMap['id'] != null){
+      if (args.receivedMap['id'] != null) {
         getCartData(int.parse(args.receivedMap['id']));
       }
-
     }
-    setState(() {});
-
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -190,41 +242,95 @@ class _CartState extends State<Cart> {
                       heightFactor: 13.9,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.0),
-                            color: const Color(0x9fFFC107),
-                          ),
-                          width: MediaQuery.of(context).size.width - 220,
-                          height: 40.0,
-                          child: GestureDetector(
-                            onHorizontalDragUpdate: (event) async {
-                              if (event.primaryDelta! > 20) {
-                                _incrementTranslate();
-
-
-
-
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                paymentSuccessfull(),
-                                width == 0.0
-                                    ? Expanded(
-                                        child: Center(
-                                        child: Text(
-                                          "Slide To Checkout($checkout)",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                      ))
-                                    : SizedBox()
-                              ],
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 30.0, left: 19.0, top: 1.5),
+                              child: GestureDetector(
+                                //behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  totalFunction();
+                                  totalToPay = totalPrice(calculatedTotal);
+                                },
+                                child: Container(
+                                  height: 40.0,
+                                  width: 150.0,
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black45), borderRadius: BorderRadius.circular(20)),
+                                  child: Text(textAlign: TextAlign.center,
+                                    "  Total(#$totalToPay)",
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 17.0,
+                                      color: const Color(0x9f000000),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50.0),
+                                color: const Color(0x9fFFC107),
+                              ),
+                              width: MediaQuery.of(context).size.width - 220,
+                              height: 40.0,
+                              child: GestureDetector(
+                                onTap: (){
+                                  if(totalToPay == 0){
+
+                                    var snackBar = const SnackBar(
+                                      content: Text(
+                                          'Select Products Before Sliding',
+                                          style: TextStyle(fontSize: 18.0)),
+                                      backgroundColor:
+                                      Color(0xff4A777A),
+                                      padding: EdgeInsets.only(left: 50.0),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+
+                                },
+                                onHorizontalDragUpdate: (event) async {
+                                  setState(() {
+
+                                    totalFunction();
+                                    totalToPay = totalPrice(calculatedTotal);
+
+                                    if(totalToPay != 0){
+                                    if (event.primaryDelta! > 20) {
+                                      _incrementTranslate();
+                                      Future.delayed(const Duration(seconds: 5), (){
+                                        Navigator.pushNamed(context, '/payment-screen', arguments: PaymentScreenArguments(totalToPay, args.receivedMap, args.seller));
+
+                                      });
+                                    }
+                                  } });
+
+                                },
+                                child: Row(
+                                  children: [
+                                    paymentSuccessfull(),
+                                    width == 0.0
+                                        ? Expanded(
+                                            child: Center(
+                                            child: Text(
+                                              "Slide To Checkout($checkout)",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ))
+                                        : SizedBox()
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -250,7 +356,7 @@ class _CartState extends State<Cart> {
             child: width > 0.0
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.check,
                         color: Colors.white,
@@ -260,7 +366,15 @@ class _CartState extends State<Cart> {
                           child: Text(
                         ' Processing ',
                         style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      ))
+                      )),
+                      SizedBox(height: 20.0, width: 20.0,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xffffffff),
+                          ),
+                          strokeWidth: 2,
+                        ),
+                      )
                     ],
                   )
                 : Icon(
