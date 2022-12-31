@@ -101,6 +101,18 @@ class Buyer{
 
     }
 
+
+    //fucntion to return list of buyers
+    public function each_buyers($buyerId, $buyerName){
+        global $database;
+
+        $sql = "SELECT * FROM $this->table WHERE id = $buyerId AND name = '$buyerName'  ";
+
+        $result = $database->query($sql);
+
+        return $database->fetch_array($result);
+    }
+
     //fucntion to return list of sellers
     public function all_sellers(){
         global $database;

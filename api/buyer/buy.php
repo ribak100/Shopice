@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 
     $buying_images_folder = '../../assets/buying_images/' ;
-    $cart_images_folder = '../../assets/cart_images/' ;
+    //$cart_images_folder = '../../assets/cart_images/' ;
 
     if (!is_dir($buying_images_folder)){
         mkdir($buying_images_folder);
@@ -90,6 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     else{
         echo json_encode(array('success' => 0, 'message' => 'Price is required!'));
+        die();
+    }
+
+    if($buy->validate_params($_POST['total_price'])){
+        $buy->total_price = $_POST['total_price'];
+    }
+    else{
+        echo json_encode(array('success' => 0, 'message' => 'total_price is required!'));
         die();
     }
 
