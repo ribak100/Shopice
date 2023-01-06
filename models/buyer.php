@@ -15,6 +15,13 @@ class Buyer{
     public $password;
     public $image;
     public $address;
+    public $phone_number;
+    public $country;
+    public $nationality;
+    public $postal_code;
+    public $shipping_address;
+    public $newPassword;
+    public $oldPassword;
    
 
 
@@ -117,7 +124,7 @@ class Buyer{
     public function all_sellers(){
         global $database;
 
-        $sql = "SELECT id, name, image, address, description FROM $this->table";
+        $sql = "SELECT id, name, image, address, description, phone_number, country, nationality, postal_code, shipping_address FROM $this->table";
 
         $result = $database->query($sql);
 
@@ -132,6 +139,51 @@ class Buyer{
 
         echo json_encode($database->query($sql));
     }
+
+
+    //saving updated data to database
+    public function update_buyer($buyerID, $email, $name, $address, $phone_number, $country, $nationality, $postal_code, $shipping_address ){
+        global $database;
+
+        
+        $sql = "UPDATE buyers SET name = '$name', address = '$address', phone_number = '$phone_number', country = '$country', nationality = '$nationality', postal_code = '$postal_code', shipping_address = '$shipping_address'  WHERE id = $buyerID AND email = '$email'";
+
+        $buyer_saved = $database->query($sql);
+
+        if($buyer_saved){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+        // function to get password to change 
+        public function change_password($buyerId,$buyerName, $newPassword, $oldPassword){
+            global $database;
+    
+            
+    
+            $sql = "SELECT password FROM buyers WHERE id = $buyerId AND name = '$buyerName'";
+    
+            $password_saved = $database->query($sql);
+
+            $return_pass = $database->fetch_row($password_saved);
+    
+            if(Bcrypt::checkPassword($oldPassword, $return_pass['password']) == true){
+
+                $sql ="UPDATE buyers SET password = '" .$database->escape_value(Bcrypt::hashPassword($this->newPassword)). "' WHERE id = $buyerId AND name = '$buyerName'";
+                $database->query($sql);
+
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+    
 
 }
 

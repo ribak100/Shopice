@@ -76,6 +76,32 @@ class Cart {
 
     }
 
+    //method to Set If user is about to buy
+    public function buy($seller_id, $image, $buyer_id)
+    {
+        global $database;
+        //$this->name = trim(htmlspecialchars(strip_tags($this->name)));
+        //$this->price_per_kg = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
+       // $this->description = trim(htmlspecialchars(strip_tags($this->description)));
+
+        $sql = "UPDATE $this->table SET buy = 'buy' WHERE seller_id = $seller_id AND image = '$image' AND  buyer_id = '$buyer_id'";
+
+        $database->query($sql);
+
+    }
+
+    //method to delete from buying
+    public function deleteBuy($buyer_id, $buyer_name)
+    {
+        global $database;
+
+        $sql = "DELETE FROM $this->table WHERE buyer_id = $buyer_id AND buyer_name = '$buyer_name' AND  buy = 'buy' ";
+
+        $database->query($sql);
+
+    }
+
+
 
 }
 

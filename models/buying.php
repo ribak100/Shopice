@@ -73,7 +73,7 @@ class Buying {
     }
 
 
-     //method to delete from buying
+    //method to delete from buying
      public function deleteFromBuy($buyer_id, $image)
      {
          global $database;
@@ -83,7 +83,7 @@ class Buying {
          $database->query($sql);
  
      }
-
+ 
     //method to delete from buying at the initial stage in case the last order wasnt successful
      public function deleteInstanceFromBuy($buyer_id , $buyer_name)
      {
@@ -118,7 +118,7 @@ class Buying {
          //$this->price_per_kg = trim(htmlspecialchars(strip_tags($this->price_per_kg)));
          //$this->description = trim(htmlspecialchars(strip_tags($this->description)));
  
-         $sql = "UPDATE buying SET payment = '$payment' WHERE seller_id = $seller_id AND  buyer_id = '$buyer_id'";
+         $sql = "UPDATE buying SET payment = '$payment' WHERE seller_id = $seller_id AND  buyer_id = '$buyer_id' AND payment IS NULL";
  
          $database->query($sql);
  

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     
 
-    echo json_encode(array('success' => 1, 'paid' => $buy->get_pending_orders($buy->buyer_id, $buy->buyer_name)));
+    echo json_encode(array('success' => 1, 'pend' => $buy->get_pending_orders($buy->buyer_id, $buy->buyer_name)));
 
 } else {
     die(header('HTTP/1.1 405 Request Method Not Allowed'));
