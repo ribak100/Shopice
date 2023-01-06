@@ -28,6 +28,11 @@ class SellerItem extends StatelessWidget {
     mapResponse['email'] = args.receivedMap['email'];
     mapResponse['image'] = args.receivedMap['image'];
     mapResponse['address'] = args.receivedMap['address'];
+    mapResponse['phone_number'] = args.receivedMap['phone_number'];
+    mapResponse['postal_code'] = args.receivedMap['postal_code'];
+    mapResponse['shipping_address'] = args.receivedMap['shipping_address'];
+    mapResponse['country'] = args.receivedMap['country'];
+    mapResponse['nationality'] = args.receivedMap['nationality'];
     List<Seller> sellers = args.seller.cast<Seller>() ;
     return GestureDetector(
       onTap: () {

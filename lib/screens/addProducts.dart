@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import '../models/seller.dart';
 import '../utility/removeBg.dart';
@@ -15,6 +16,7 @@ import '../screens/viewProducts.dart';
 import '../screens/availableOrder.dart';
 import '../screens/shippedOrder.dart';
 import '../screens/completedOrder.dart';
+
 
 class AddProduct extends StatefulWidget {
   //static const routeName = '/addProduct-screen';
@@ -29,8 +31,12 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
-  File? _image;
+  List<int> data = [102, 111, 114, 116, 121, 45, 116, 119, 111, 0];
+  Uint8List _image =  Uint8List.fromList([1, 0, 0, 128]);
+  http.Response? result;
+
   final picker = ImagePicker();
+  late String imagePath;
   TextEditingController nameController = new TextEditingController();
   TextEditingController priceController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
@@ -39,12 +45,18 @@ class _AddProductState extends State<AddProduct> {
   bool _validatePrice = false;
   bool _validateDescription = false;
 
+  bool _imageVisible = false;
+  bool _viewVisible = false;
+  bool _addVisible = false;
+
 
 
   Future ChoiceImage() async {
     var pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      _image = File(pickedImage!.path);
+      //_image = File(pickedImage!.path);
+      imagePath = pickedImage!.path;
+      _viewVisible = true;
     });
   }
 
@@ -56,7 +68,12 @@ class _AddProductState extends State<AddProduct> {
     request.fields['name'] = nameController.text;
     request.fields['price_per_kg'] = priceController.text;
     request.fields['description'] = descriptionController.text;
-    var pic = await http.MultipartFile.fromPath("image", _image!.path);
+
+    final temDir = await getTemporaryDirectory();
+    File file = await File('${temDir.path}/image.png').create();
+    file.writeAsBytesSync(_image);
+
+    var pic = await http.MultipartFile.fromPath("image", file.path);
     request.files.add(pic);
     var response = await request.send();
 
@@ -270,7 +287,7 @@ class _AddProductState extends State<AddProduct> {
               child: TextField(
                 controller: priceController,
                 decoration: InputDecoration(
-                  labelText: 'Price/Kg',
+                  labelText: 'Price',
                   labelStyle: TextStyle(color: Color(0xff4A777A)),
                   prefixIcon: Icon(Icons.price_change_outlined),
                   enabledBorder: OutlineInputBorder(
@@ -295,61 +312,108 @@ class _AddProductState extends State<AddProduct> {
               ),
             ),
 
-            Container(
-              height: 150.0,
-              width: 250.0,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color(0xff4A777A),
-                  ),
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: _image == null
-                  ? ElevatedButton.icon(
-                onPressed: () {
-                  ChoiceImage();
-                },
-                icon: Icon(Icons.file_upload_sharp),
-                label: Text('Upload Image'),
-                style:
-                ElevatedButton.styleFrom(primary: Color(0x9f4A777A)),
-              )
-                  : Image.file(_image!),
+            Visibility( visible: _imageVisible,
+              child: Container(
+                height: 150.0,
+                width: 250.0,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xff4A777A),
+                    ),
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Image.memory(_image),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: RaisedButton(
-                shape: BeveledRectangleBorder(),
-                elevation: 10.0,
-                onPressed: () async{
-                  setState(() {
-                    nameController.text.isEmpty
-                        ? _validateName = true
-                        : _validateName = false;
-                    priceController.text.isEmpty ? _validatePrice= true : _validatePrice = false;
-                    descriptionController.text.isEmpty ? _validateDescription = true : _validateDescription = false;
 
-                  });
+            ElevatedButton.icon(
+              onPressed: () async{
+                ChoiceImage();
+                result = await RemoveBg().removeBgApi(imagePath);
 
-                  if(_image == null){
-                    showModalBottomSheet(context: context, builder: (context){
-                      return Wrap(children: [ListTile(leading: Icon(Icons.error), title: Text('Image Can\'t Be Empty'),)],);
+                setState(() {
+
+                  _image = result!.bodyBytes;
+                  _imageVisible = true;
+                });
+
+                Future.delayed(Duration(seconds: 10), (){
+
+                });
+              },
+              icon: Icon(Icons.file_upload_sharp),
+              label: Text('Upload Image'),
+              style:
+              ElevatedButton.styleFrom(primary: Color(0x9f4A777A)),
+            ),
+
+            Visibility(visible: _viewVisible,
+              child: FlatButton(onPressed: ()async{
+
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
+
+                Future.delayed(Duration(seconds: 3));
+
+                result = await RemoveBg().removeBgApi(imagePath);
+                setState(() {
+
+                  _image = result!.bodyBytes;
+                  _imageVisible = true;
+                  _addVisible = true;
+                });
+
+
+              },color: Color(0x9f4A777A), child: Text('View Image', style: TextStyle(color: Colors.white),)),
+            ),
+            Visibility(visible: _addVisible,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                child: RaisedButton(
+                  shape: BeveledRectangleBorder(),
+                  elevation: 10.0,
+                  onPressed: () async{
+                    setState(() {
+                      nameController.text.isEmpty
+                          ? _validateName = true
+                          : _validateName = false;
+                      priceController.text.isEmpty ? _validatePrice= true : _validatePrice = false;
+                      descriptionController.text.isEmpty ? _validateDescription = true : _validateDescription = false;
+
+
                     });
-                    return;
-                  }
-                  UploadImage();
-                  Future.delayed(const Duration(seconds: 2), (){
-                    Navigator.of(context).pop();
 
-                  });
+                    if(_image == null){
+                      showModalBottomSheet(context: context, builder: (context){
+                        return Wrap(children: [ListTile(leading: Icon(Icons.error), title: Text('Image Can\'t Be Empty'),)],);
+                      });
+                      return;
+                    }
 
-                },
-                color: Color(0xff4A777A),
-                child: Text(
-                  "Add Product",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 20.0,
-                    color: Colors.white,
+                    if((_validateName == false)&& (_validatePrice == false) && (_validateDescription == false)){
+                      UploadImage();
+                      Future.delayed(const Duration(seconds: 1), (){
+                        Navigator.of(context).pop();
+
+                        setState(() {
+                          nameController.text = '';
+                          priceController.text = '';
+                          descriptionController.text = '';
+
+                        });
+
+                      });
+                    }
+
+
+
+                  },
+                  color: Color(0xff4A777A),
+                  child: Text(
+                    "Add Product",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20.0,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

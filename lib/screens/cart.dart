@@ -304,6 +304,7 @@ class _CartState extends State<Cart> {
                                     if (event.primaryDelta! > 20) {
                                       _incrementTranslate();
                                       Future.delayed(const Duration(seconds: 5), (){
+
                                         Navigator.pushNamed(context, '/payment-screen', arguments: PaymentScreenArguments(totalToPay, args.receivedMap, args.seller));
 
                                       });

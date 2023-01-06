@@ -116,16 +116,28 @@ class _ProductScreenState extends State<ProductScreen> {
                             color: Colors.grey),
                       )
                       else if(args.receivedMap['image'] != null)
-                        Container(
-                          height: 45.0,
-                          width: 45.0,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
-                                  fit: BoxFit.cover),
-                              shape: BoxShape.circle,
-                              color: Colors.grey),
+                        GestureDetector(onTap: (){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Color(0x00ffffff),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),duration: Duration(seconds: 2), ) );
+                          Future.delayed(Duration(seconds: 1), (){
+                            Navigator
+                                .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
+                            )
+                            );
+                          });
+
+
+                        },
+                          child: Container(
+                            height: 45.0,
+                            width: 45.0,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
+                                    fit: BoxFit.cover),
+                                shape: BoxShape.circle,
+                                color: Colors.grey),
+                          ),
                         )
 
                     ],
@@ -398,16 +410,28 @@ class _ProductScreenState extends State<ProductScreen> {
                       onPressed: () => Navigator.of(context).pop(),
                       icon: Icon((Icons.home))),
                   IconButton(
-                      onPressed: () => print('Icon buton pressed'),
+                      onPressed: () {
+                        var snackBar = SnackBar(content: Text("Available Soon!"));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    },
                       icon: Icon((Icons.search))),
                   IconButton(
-                      onPressed: () => Navigator
-                          .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap, args.seller
-                      )as CartArguments
-                      ),
+                      onPressed: () {
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Color(0x00ffffff),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),duration: Duration(seconds: 2), ) );
+                        Future.delayed(Duration(seconds: 1), (){
+                                Navigator
+                                    .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap, args.seller
+                                )as CartArguments
+                                );
+                        });},
                       icon: Icon((Icons.shopping_cart_sharp))),
                   IconButton(
-                      onPressed: () => print('Icon buton pressed'),
+                      onPressed: () {
+    var snackBar = SnackBar(content: Text("Available Soon!"));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    },
+
                       icon: Icon((Icons.menu))),
                   IconButton(
                       onPressed: () {
@@ -425,10 +449,14 @@ class _ProductScreenState extends State<ProductScreen> {
 
                         }
                         else{
-                          Navigator
-                              .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
-                          )
-                          );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Color(0x00ffffff),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),duration: Duration(seconds: 2), ) );
+                          Future.delayed(Duration(seconds: 1), (){
+                            Navigator
+                                .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
+                            )
+                            );
+                          });
+
                         }
                         },
                       icon: Icon((Icons.person_outline))),

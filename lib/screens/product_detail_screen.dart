@@ -319,8 +319,11 @@ class _ProductScreenDetailsState extends State<ProductScreenDetails> {
                                   borderRadius: BorderRadius.circular(10.0),
                                   border: Border.all(color: Color(0xff4A777A))),
                               child: FlatButton(
-                                  onPressed: () =>
-                                      print(args.receivedMap['name']),
+                                  onPressed: ()
+                                      {
+                                  var snackBar = SnackBar(content: Text("Will be available soon... please add to cart instead!"));
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      },
                                   child: Text(
                                     'Buy Now',
                                     style: GoogleFonts.poppins(

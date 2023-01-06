@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shopice/screens/splash_screen.dart';
+import 'package:mailto/mailto.dart';
 
-import '../screens/sellers_screen.dart';
+import 'package:shopice/screens/QandA.dart';
+import 'package:shopice/screens/about.dart';
+import 'package:shopice/screens/deliveredOrder.dart';
+import 'package:shopice/screens/pending.dart';
+import 'package:shopice/screens/splash_screen.dart';
+import '../screens/paidOrder.dart';
+import '../screens/shipped.dart';
+import '../screens/viewProfile.dart';
+import '../screens/editProfile.dart';
+import '../screens/changePassword.dart';
+import '../utility/pageRoutes.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class ProfileScreenArguments{
   final Map<String, dynamic> receivedMap;
@@ -27,6 +40,49 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   var mapResponseLogin = Map<String, dynamic>();
+  TextEditingController appSuggesstionController = new TextEditingController();
+  bool _validateAppSuggestion = false;
+
+  TextEditingController subjectController = new TextEditingController();
+  bool _validateSubject = false;
+
+
+  _launchWhatsapp(String name) async {
+    var whatsapp = "+2348089222398";
+    var whatsappAndroid =Uri.parse("whatsapp://send?phone=$whatsapp&text=Hi i'm $name and i'm contacting you because i have an issues with the shopice app which is .....");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
+  }
+
+
+  void _launchMailClient() async {
+    const mailUrl = 'mailto:adekanyekabir@gmail.com';
+    try {
+      await launch(mailUrl);
+    } catch (e) {
+      await Clipboard.setData(ClipboardData(text: 'adekanyekabir@gmail.com'));
+    }
+  }
+
+
+
+
+  _launchMailto(String body, String name, String email, String subject) async {
+    final mailtoLink = Mailto(
+      to: ['adekanyekabir@gmail.com'],
+      subject: "$subject  Sent from: $name",
+      body: "$body",
+    );
+    await launch('$mailtoLink');
+  }
+
 
 
   @override
@@ -58,7 +114,8 @@ class _ProfileState extends State<Profile> {
                     fontWeight: FontWeight.w500,
                     fontSize: 17.0,
                     color: Colors.black,
-                  ),),
+                  ),
+                  ),
                 ],
               ),
             ),
@@ -84,7 +141,7 @@ class _ProfileState extends State<Profile> {
                   Row(children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                      child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.wallet), color: Color(0xff4A777A),iconSize: 40.0),
+                      child: Column(children: [IconButton(onPressed: () => Navigator.of(context).push(CustomPageRouteLR(child: Pending(receivedMap: args.receivedMap), direction: AxisDirection.right)), icon: Icon(Icons.wallet), color: Color(0xff4A777A),iconSize: 40.0),
                         Text("Pending", style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                           fontSize: 13.0,
@@ -94,7 +151,7 @@ class _ProfileState extends State<Profile> {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
-                      child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.pending), color: Color(0xff4A777A),iconSize: 40.0),
+                      child: Column(children: [IconButton(onPressed: () => Navigator.of(context).push(FadePageRouteLR(child: PaidOrder(receivedMap: args.receivedMap), direction: AxisDirection.right)), icon: Icon(Icons.pending), color: Color(0xff4A777A),iconSize: 40.0),
                         Text("To be shipped", style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                           fontSize: 13.0,
@@ -104,7 +161,7 @@ class _ProfileState extends State<Profile> {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0, right: 10.0),
-                      child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.local_shipping), color: Color(0xff4A777A),iconSize: 40.0),
+                      child: Column(children: [IconButton(onPressed: () => Navigator.of(context).push(FadePageRouteLR(child: Shipped(receivedMap: args.receivedMap), direction: AxisDirection.left)), icon: Icon(Icons.local_shipping), color: Color(0xff4A777A),iconSize: 40.0),
                         Text("Shipped", style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                           fontSize: 13.0,
@@ -114,7 +171,7 @@ class _ProfileState extends State<Profile> {
 
                   Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.library_add_check), color: Color(0xff4A777A),iconSize: 40.0),
+                      child: Column(children: [IconButton(onPressed: () => Navigator.of(context).push(CustomPageRouteLR(child: DeliveredOrder(receivedMap: args.receivedMap), direction: AxisDirection.left)), icon: Icon(Icons.library_add_check), color: Color(0xff4A777A),iconSize: 40.0),
                         Text("To be reviewed", style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                           fontSize: 13.0,
@@ -151,7 +208,8 @@ class _ProfileState extends State<Profile> {
                   Row(children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0, top: 6.0, right: 10.0),
-                      child: GestureDetector( onTap: () => print("View Profile"),
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).push(ScaleFadePageRouteLR(child: ViewProfile(receivedMap: args.receivedMap), direction: AxisDirection.right)),
                         child: Container(height: 85.0, width: 100,decoration: BoxDecoration(color: Color(0xffD1DAE1), borderRadius: BorderRadius.circular(20.0)),
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
@@ -171,7 +229,7 @@ class _ProfileState extends State<Profile> {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, top: 6.0, right: 10.0),
-                      child: GestureDetector(onTap: () => print("Edit Profile"),
+                      child: GestureDetector(onTap: () => Navigator.of(context).push(FadeScalePageRoute(child: EditProfile(receivedMap: args.receivedMap))),
                         child: Container(height: 85.0, width: 100,decoration: BoxDecoration(color: Color(0xffD1DAE1), borderRadius: BorderRadius.circular(20.0)),
                           child: Column(
                             children: [
@@ -190,38 +248,15 @@ class _ProfileState extends State<Profile> {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, top: 6.0,),
-                      child: GestureDetector( onTap: () {
-
-                        var snackbar = SnackBar(
-                          content: Text(
-                              "Logout Succesfull",
-                              style: TextStyle(fontSize: 20.0)),
-                          backgroundColor:
-                          const Color(0xff4A777A),
-                          padding: EdgeInsets.only(left: 50.0),
-                        );
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(snackbar);
-
-                        Navigator.pop(context);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            settings: RouteSettings(name: '/splash-screen'),
-                            builder: (context) => SplashScreen(receivedMap: mapResponseLogin,)
-                          ),
-                        );
-
-
-
-                      },
+                      child: GestureDetector( onTap: () => Navigator.of(context).push(ScaleFadePageRouteLR(child: ChangePassword(receivedMap: args.receivedMap), direction: AxisDirection.left)),
                         child: Container(height: 85.0, width: 100,decoration: BoxDecoration(color: Color(0xffD1DAE1), borderRadius: BorderRadius.circular(20.0)),
                           child:
                           Column(children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 5.0),
-                              child: Icon(Icons.logout, size: 40.0,color: Color(0xff4A777A)),
+                              child: Icon(Icons.password, size: 40.0,color: Color(0xff4A777A)),
                             ),
-                            Text("Logout", style: GoogleFonts.poppins(
+                            Text("Password", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
                               color: Colors.black,)),
@@ -331,7 +366,11 @@ class _ProfileState extends State<Profile> {
                       Row(children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 25.0, right: 20.0),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.account_balance_wallet), color: Color(0xff4A777A),iconSize: 40.0),
+                          child: Column(children: [IconButton(onPressed: () {
+                            var snackBar = SnackBar(content: Text("Wallet Would Be Available Soon"));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                          }, icon: Icon(Icons.account_balance_wallet), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("Wallet\n", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
@@ -341,7 +380,23 @@ class _ProfileState extends State<Profile> {
 
                         Padding(
                           padding: const EdgeInsets.only(left: 12.0, right: 14),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.location_city), color: Color(0xff4A777A),iconSize: 40.0),
+                          child: Column(children: [IconButton(onPressed: () => {
+                            showModalBottomSheet(context: context, builder: (context){
+                              return Wrap(children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: ListTile(
+                                    leading: Icon(Icons.house, size: 40.0,), title: Text('Shipping Address : ${args.receivedMap['shipping_address']} Postal Code : ${args.receivedMap['postal_code']}', style: TextStyle(fontSize: 18.0),),
+                                  ),
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.edit, color: Colors.grey,), title: Text('You Can Change Shipping Address From Profile', style: TextStyle(color: Colors.grey),),
+                                )
+                              ],
+                              );
+                            })
+
+                          }, icon: Icon(Icons.location_city), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("Shipping\n Adress", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
@@ -350,8 +405,11 @@ class _ProfileState extends State<Profile> {
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 17.0, right: 17.0),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.insert_invitation), color: Color(0xff4A777A),iconSize: 40.0),
+                          padding: const EdgeInsets.only(left: 12.0, right: 15.0),
+                          child: Column(children: [IconButton(onPressed: () {
+                            var snackBar = SnackBar(content: Text("Invite Would Be Available Soon"));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }, icon: Icon(Icons.insert_invitation), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("Invite\n", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
@@ -361,7 +419,14 @@ class _ProfileState extends State<Profile> {
 
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.support_agent), color: Color(0xff4A777A),iconSize: 40.0),
+                          child: Column(children: [IconButton(onPressed: ()  {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
+                            Future.delayed(Duration(seconds: 3), (){
+                            _launchWhatsapp(args.receivedMap['name']);
+                            });
+
+
+                          }, icon: Icon(Icons.support_agent), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("Support\n", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
@@ -377,7 +442,7 @@ class _ProfileState extends State<Profile> {
                       Row(children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.question_answer), color: Color(0xff4A777A),iconSize: 40.0),
+                          child: Column(children: [IconButton(onPressed: () =>  Navigator.of(context).push(ScaleFadePageRouteLR( child: QAndA(),direction: AxisDirection.up)), icon: Icon(Icons.question_answer), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("Questions &\n  Answers", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,
@@ -386,8 +451,80 @@ class _ProfileState extends State<Profile> {
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Column(children: [IconButton(onPressed: () => print('pressed'), icon: Icon(Icons.settings_suggest), color: Color(0xff4A777A),iconSize: 40.0),
+                          padding: const EdgeInsets.only(left: 14.0, right: 12.0, bottom: 0.0),
+                          child: Column(children: [IconButton(onPressed: () => Navigator.of(context).push(ScaleFadePageRouteLR( child: About(),direction: AxisDirection.up))
+                          , icon: Icon(Icons.question_mark), color: Color(0xff4A777A),iconSize: 40.0),
+                            Text("About\n   Us", style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13.0,
+                              color: Colors.black,)),
+                          ],),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, right: 8.0, bottom: 7.0),
+                          child: Column(children: [IconButton(onPressed: () {
+
+                            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
+                            // Future.delayed(Duration(seconds: 3), (){
+                            //   _launchMailClient();
+                            // });
+
+
+                            showModalBottomSheet<dynamic>(isScrollControlled: true,context: context, builder: (context){
+                              return Wrap(children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    children: [
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        child: TextField(maxLines: 3,minLines: 1,decoration: InputDecoration(enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(0xff4A777A)),
+                                            borderRadius: BorderRadius.circular(20)),labelText: "Subject",  errorText: _validateSubject ? 'Please fill the Subject box' : null,
+                                        ), controller: subjectController,),
+                                      ),
+
+                                      TextField(maxLines: 15,minLines: 10,decoration: InputDecoration(enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Color(0xff4A777A)),
+                                          borderRadius: BorderRadius.circular(20)),labelText: "Suggestion",  errorText: _validateAppSuggestion ? 'Please fill the suggestion box' : null,
+                                      ), controller: appSuggesstionController,),
+
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 160.0, top: 15.0),
+                                  child: FlatButton(onPressed: (){
+                                    setState(() {
+                                      appSuggesstionController.text.isEmpty
+                                          ? _validateAppSuggestion = true
+                                          : _validateAppSuggestion = false;
+
+                                      subjectController.text.isEmpty
+                                          ? _validateSubject = true
+                                          : _validateSubject = false;
+                                    });
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
+                                    Future.delayed(Duration(seconds: 3), (){
+                                    _launchMailto(appSuggesstionController.text, args.receivedMap['name'], args.receivedMap['email'], subjectController.text);
+                                    });
+
+
+
+                                  }, child: Text("Submit", style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 16.0,
+                              color: Colors.white ,
+                              ),), color: Color(0xff4A777A),),
+                                ),
+                                SizedBox(height: 280,),
+                              ],);
+                            }, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)));
+
+                          }, icon: Icon(Icons.settings_suggest), color: Color(0xff4A777A),iconSize: 40.0),
                             Text("       App\nsuggestions", style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 13.0,

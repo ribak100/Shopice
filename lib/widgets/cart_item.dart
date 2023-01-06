@@ -256,16 +256,7 @@ class _CartItemState extends State<CartItem> {
                                 var response = await request.send();
 
                                 if (response.statusCode == 200) {
-                                  var snackbar = SnackBar(
-                                    content: Text(
-                                        'Product Added To Cart!',
-                                        style: TextStyle(fontSize: 20.0)),
-                                    backgroundColor:
-                                    const Color(0xff4A777A),
-                                    padding: EdgeInsets.only(left: 50.0),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackbar);
+                                  ServerHandler().buy(widget.carts.sellerId!, widget.carts.image!, widget.carts.buyerId!);
                                 } else if (response.statusCode == 500) {
                                   var snackbar = SnackBar(
                                     content: Text('Server Error!',

@@ -173,7 +173,7 @@ class ServerHandler {
   Future<String> shipping(int sellerId,String image,int buyerID, String shipping) async {
     try {
       http.Response response = await http.get(Uri.parse(
-          '$_baseUrl/buyer/quantity?seller_id=$sellerId&image=$image&buyer_id=$buyerID&quantity=$shipping'));
+          '$_baseUrl/buyer/shipping?seller_id=$sellerId&image=$image&buyer_id=$buyerID&shipping=$shipping'));
 
       return "success";
 
@@ -186,7 +186,7 @@ class ServerHandler {
   Future<String> delivery(int sellerId,String image,int buyerID, String delivery) async {
     try {
       http.Response response = await http.get(Uri.parse(
-          '$_baseUrl/buyer/quantity?seller_id=$sellerId&image=$image&buyer_id=$buyerID&quantity=$delivery'));
+          '$_baseUrl/buyer/delivery?seller_id=$sellerId&image=$image&buyer_id=$buyerID&delivery=$delivery'));
 
       return "success";
 
@@ -377,15 +377,15 @@ class ServerHandler {
       List<BuyModel> buyModel = [];
 
       http.Response response = await http
-          .get(Uri.parse('$_baseUrl/buyer/pending?seller_id=$buyerID&seller_name=$buyerName'));
+          .get(Uri.parse('$_baseUrl/buyer/pending?buyer_id=$buyerID&buyer_name=$buyerName'));
 
-      List productList = json.decode(response.body)['paid'];
+      List pendingList = json.decode(response.body)['pend'];
 
-      for (Map m in productList) {
+      for (Map m in pendingList) {
         buyModel.add(BuyModel.fromMap(m));
       }
 
-      print(buyModel);
+      print("Buy Model = $buyModel");
 
       return buyModel;
     } catch (e) {
@@ -401,7 +401,7 @@ class ServerHandler {
       List<BuyModel> buyModel = [];
 
       http.Response response = await http
-          .get(Uri.parse('$_baseUrl/buyer/pendingShipment?seller_id=$buyerID&seller_name=$buyerName'));
+          .get(Uri.parse('$_baseUrl/buyer/pendingShipment?buyer_id=$buyerID&buyer_name=$buyerName'));
 
       List productList = json.decode(response.body)['paid'];
 
@@ -424,7 +424,7 @@ class ServerHandler {
       List<BuyModel> buyModel = [];
 
       http.Response response = await http
-          .get(Uri.parse('$_baseUrl/buyer/shippedBuyer?seller_id=$buyerID&seller_name=$buyerName'));
+          .get(Uri.parse('$_baseUrl/buyer/shippedBuyer?buyer_id=$buyerID&buyer_name=$buyerName'));
 
       List productList = json.decode(response.body)['paid'];
 
@@ -447,7 +447,7 @@ class ServerHandler {
       List<BuyModel> buyModel = [];
 
       http.Response response = await http
-          .get(Uri.parse('$_baseUrl/buyer/completedOrder?seller_id=$buyerID&seller_name=$buyerName'));
+          .get(Uri.parse('$_baseUrl/buyer/completedOrder?buyer_id=$buyerID&buyer_name=$buyerName'));
 
       List productList = json.decode(response.body)['paid'];
 
@@ -464,9 +464,79 @@ class ServerHandler {
     }
   }
 
+  //get paid product list
+  Future<bool> updateBuyerDetails(int buyerID, String email,String name, String address, String phone_number, String country, String nationality, String postal_code, String shipping_address ) async {
+    try {
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/complete_registration?name=$name&phone_number=$phone_number&country=$country&address=$address&shipping_address=$shipping_address&id=$buyerID&nationality=$nationality&postal_code=$postal_code&email=$email'));
+
+
+      if(response.statusCode == 200){
+        return true;
+      }
+      else{
+        return false;
+      }
+
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+  //get paid product list
+  Future<String> changePassword(int buyerId, String buyerName, String newPassword, String oldPassword) async {
+    try {
+
+      http.Response response = await http
+          .get(Uri.parse('$_baseUrl/buyer/new_password?id=$buyerId&name=$buyerName&newPassword=$newPassword&oldPassword=$oldPassword'));
+
+      if(response.statusCode == 200){
+        return response.body;
+      }
+      else{
+        return response.body;
+      }
+
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+//function to set cart order to buy, ready to be removed
+  Future<String> buy(int sellerId,String image,int buyerID) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/removeFromCart?seller_id=$sellerId&image=$image&buyer_id=$buyerID'));
 
 
 
+      return "success";
+
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
+
+
+  //delete from cart
+  Future<String> deleteCartProduct(int buyerId, String buyerName) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          '$_baseUrl/buyer/deleteFromCart?buyer_id=$buyerId&buyer_name=$buyerName'));
+
+      return "success";
+    } catch (e) {
+      print("Server Handler : error : $e");
+      rethrow;
+    }
+  }
 
 
 

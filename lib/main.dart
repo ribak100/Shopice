@@ -11,6 +11,7 @@ import './screens/payment.dart';
 import './screens/registration_buyer.dart';
 import './screens/loginBuyer.dart';
 import './screens/profile.dart';
+import './screens/about.dart';
 
 void main() => runApp(const MyApp());
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         Cart.routeName: (_) => const Cart(),
         PaymentScreen.routeName: (_) => const PaymentScreen(),
         Profile.routeName: (_) => const Profile(),
+        About.routeName: (_) => const About(),
         //ViewProduct.routeName: (_) => const ViewProduct(),
 
        // AddProduct.routeName: (_) => const AddProduct(),

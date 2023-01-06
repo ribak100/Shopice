@@ -130,7 +130,7 @@ class _LoginBuyerState extends State<LoginBuyer> {
             Padding(
               padding: const EdgeInsets.only(
                   top: 20.0, bottom: 30.0, left: 3.0, right: 3.0),
-              child: TextField(
+              child: TextField(obscureText: true,
                 controller: passwordController,
                 decoration: InputDecoration(
                     labelText: 'Password',
@@ -169,8 +169,13 @@ class _LoginBuyerState extends State<LoginBuyer> {
                   mapResponseLoginBuyer['image'] = jsonResponse['image'];
                   mapResponseLoginBuyer['id'] = jsonResponse['id'];
                   mapResponseLoginBuyer['address'] = jsonResponse['address'];
+                  mapResponseLoginBuyer['phone_number'] = jsonResponse['phone_number'];
+                  mapResponseLoginBuyer['postal_code'] = jsonResponse['postal_code'];
+                  mapResponseLoginBuyer['shipping_address'] = jsonResponse['shipping_address'];
+                  mapResponseLoginBuyer['country'] = jsonResponse['country'];
+                  mapResponseLoginBuyer['nationality'] = jsonResponse['nationality'];
 
-                  print( mapResponseLoginBuyer['name']);
+
                   print(response.body);
                   var snackbar = SnackBar(
                     content: Text('Login Successful!',

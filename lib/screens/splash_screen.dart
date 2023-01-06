@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_background/animated_background.dart';
+import 'package:shopice/utility/colors.dart';
 
 import '../server_handler.dart';
 import '../screens/sellers_screen.dart';
@@ -23,6 +24,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{
   bool showLoadingSellers = false;
   dynamic _timer;
+  var boxColor = primaryColor[3];
 
   ParticleOptions particles = const ParticleOptions(
       baseColor: Color(0xffD5DEDC),
@@ -54,6 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _timer = Timer(
         const Duration(seconds: 3),
         () => {
+          boxColor = Color(0xffE6F3EC) ,
               showLoadingSellers = true,
               setState(() {}),
               _timer = Timer(
@@ -78,9 +81,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       body: AnimatedBackground(
         vsync: this,
         behaviour: RandomParticleBehaviour(options: particles),
-        child: Container(
+        child: AnimatedContainer(duration: Duration(seconds: 2),
           alignment: Alignment.center,
-          color: const Color(0xffE6F3EC),
+          color: boxColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

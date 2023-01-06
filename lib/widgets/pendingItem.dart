@@ -10,47 +10,28 @@ import '../utility/colors.dart';
 import '../models/buyer.dart';
 import '../screens/product_detail_screen.dart';
 
-class AvailableOrderItem extends StatefulWidget {
+class PendingItem extends StatefulWidget {
   final BuyModel buyModel;
   final int buyIndex;
 
-  const AvailableOrderItem(
+  const PendingItem(
       {Key? key, required this.buyModel, required this.buyIndex})
       : super(key: key);
 
   @override
-  State<AvailableOrderItem> createState() => _AvailableOrderItemState();
+  State<PendingItem> createState() => _PendingItemState();
 }
 
-class _AvailableOrderItemState extends State<AvailableOrderItem> {
+class _PendingItemState extends State<PendingItem> {
   late String response;
   late String responseDelete;
-  List<Buyer> _buyer = [];
   bool _firstExec = true;
-  bool addressVisible = false;
-  String address = "";
 
-  void eachBuyer(int buyerId, String buyerName, bool execution) {
-    if (execution == true) {
-      ServerHandler().eachBuyer(buyerId, buyerName).then((value) => {
-            setState(() {
-              print("Value Inside Funtion =  $value");
-              _buyer = value.cast<Buyer>();
-            })
-          });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     // Used this to generate all list of user product to be view
 
-    eachBuyer(int.parse(widget.buyModel.buyerId!), widget.buyModel.buyerName!,
-        _firstExec);
-
-    setState(() {
-      _firstExec = false;
-    });
 
     int interact;
     return Row(
@@ -58,7 +39,7 @@ class _AvailableOrderItemState extends State<AvailableOrderItem> {
         Padding(
           padding: const EdgeInsets.only(left: 10.0, top: 15, bottom: 10),
           child: Column(
-              //image section
+            //image section
 
               children: [
                 Container(
@@ -133,7 +114,7 @@ class _AvailableOrderItemState extends State<AvailableOrderItem> {
                                 ),
                               ),
                                 Text(
-                                  "Name : ${widget.buyModel.buyerName}",
+                                  "Seller : ${widget.buyModel.sellerName}",
                                   textAlign: TextAlign.left,
                                   style: GoogleFonts.poppins(
                                     color: Colors.grey,
@@ -148,99 +129,35 @@ class _AvailableOrderItemState extends State<AvailableOrderItem> {
                     ],
                   ),
                 ),
-                if(addressVisible == false)
-                  SizedBox(height: 50.0,),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Visibility(visible: addressVisible,
-                    child: Container(height: 50.0, width: 300,decoration: BoxDecoration(color: Color(0xffD5DEDC),border: Border.all(color: Colors.black12)), child: Padding(
-                      padding: const EdgeInsets.only(left: 7.0, top: 2.0),
-                      child: Text(
-                        "Address : $address",
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.poppins(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),),
-                  ),
-                ),
               ]),
         ),
-       Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 0.0),
-                child: GestureDetector(onTap: (){
-
-                  showModalBottomSheet<dynamic>(context: context,builder: (BuildContext context) {
-                    return Container(height: 200, width: 300,color: Colors.white, child: Column(children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-                        child: Text("Confirm that selected product has been shipped!", style: TextStyle(fontSize: 16),),
-                      ),
-                      Row(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50.0,right: 50.0),
-                          child: FlatButton(color: Colors.grey, onPressed: () => Navigator.of(context).pop(), child: Text('No', style: TextStyle(color: Color(0xff4A777A)),)),
-                        ),
-                        FlatButton(color: Color(0xff4A777A), onPressed: () async{
-
-                          String image =  await ServerHandler().getImage(int.parse(widget.buyModel.sellerId!), int.parse(widget.buyModel.buyerId!), widget.buyModel.price!, widget.buyModel.productName!);
-                          String success = await ServerHandler().shipping(int.parse(widget.buyModel.sellerId!), image, int.parse(widget.buyModel.buyerId!), "shipped");
-
-                          Navigator.of(context).pop();
-                          //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Product Shipped"),));
-                          Navigator.of(context).pop();
-
-                        }, child: Text('Yes i confirm', style: TextStyle(color: Colors.white),))
-                      ],)
-                    ],),
-                    ); });
-
-
-                },
-                  child: Container(decoration: BoxDecoration(color: Color(0xffD1DAE1),border: Border.all(color: Colors.black38)),
-                    height: 248,
-                    width: 50,
-                    child: RotatedBox(
-                        quarterTurns: -1,
-                        child: Center(
-                            child: Text(
-                          "Ship Product",
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, top: 0.0),
+              child: Container(decoration: BoxDecoration(color: Color(0xffD0C7C9),border: Border.all(color: Colors.black38)),
+                height: 195,
+                width: 50,
+                child: RotatedBox(
+                    quarterTurns: -1,
+                    child: Center(
+                        child: Text(
+                          "Pending",
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w500,
                             fontSize: 23.0,
                             color: Colors.black38,
                           ),
                         ))),
-                  ),
-                ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0, bottom: 0.0, top: 4.0),
-                child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        address = _buyer[0].address!;
-                            if(addressVisible == false){
-                              addressVisible = true;
-                            }
-                            else if(addressVisible == true){
-                              addressVisible = false;
-                            }
-
-                      });
-                }, icon: Icon(Icons.location_city, size: 50, color: Color(0xff4A777A),)),
-              )
-
-
-            ],
-          ),
-
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0, bottom: 2.0),
+              child: IconButton(onPressed: () => print("Support"), icon: Icon(Icons.support_agent_outlined, size: 50, color: Color(0xff4A777A),)),
+            )
+          ],
+        ),
 
       ],
     );

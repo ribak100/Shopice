@@ -280,6 +280,8 @@ class _PaymentScreenState extends State<PaymentScreen>
                   child: RaisedButton(
                     onPressed: () async{
                       await ServerHandler().payment(args.seller.id!, int.parse(args.receivedMap['id']), "paid");
+                      ServerHandler().deleteCartProduct(int.parse(args.receivedMap['id']), args.receivedMap['name']);
+
 
                       var snackbar = SnackBar(content: Text("Payment Successful!"));
                       ScaffoldMessenger.of(context)
