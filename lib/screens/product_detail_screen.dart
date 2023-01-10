@@ -71,10 +71,13 @@ class _ProductScreenDetailsState extends State<ProductScreenDetails> {
                 //product image
                 Container(
                   alignment: Alignment.center,
-                  child: Image.network(
-                    "http://10.0.2.2:/shopice/assets/${args.product.image!}",
-                    height: MediaQuery.of(context).size.height * 1 / 3,
-                    alignment: Alignment.center,
+                  child: Hero(
+                    tag: "popular.${args.product.image!}",
+                    child: Image.network(
+                      "http://10.0.2.2:/shopice/assets/${args.product.image!}",
+                      height: MediaQuery.of(context).size.height * 1 / 3,
+                      alignment: Alignment.center,
+                    ),
                   ),
                 ),
                 //product price per kh

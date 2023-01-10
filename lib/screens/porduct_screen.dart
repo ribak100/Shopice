@@ -117,8 +117,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       )
                       else if(args.receivedMap['image'] != null)
                         GestureDetector(onTap: (){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Color(0x00ffffff),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),duration: Duration(seconds: 2), ) );
-                          Future.delayed(Duration(seconds: 1), (){
+                          Future.delayed(Duration(seconds: 0), (){
                             Navigator
                                 .pushNamed(context, '/profile-screen', arguments: ProfileScreenArguments(args.receivedMap
                             )
@@ -127,16 +126,19 @@ class _ProductScreenState extends State<ProductScreen> {
 
 
                         },
-                          child: Container(
-                            height: 45.0,
-                            width: 45.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
-                                    fit: BoxFit.cover),
-                                shape: BoxShape.circle,
-                                color: Colors.grey),
+                          child: Hero(
+                            tag: "profile_image.${args.receivedMap['image']}",
+                            child: Container(
+                              height: 45.0,
+                              width: 45.0,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}" ),
+                                      fit: BoxFit.cover),
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey),
+                            ),
                           ),
                         )
 
@@ -392,6 +394,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                       fontSize: 9.5,
                                     )),
                               ),
+
+
                             ],
                           ))),
                 ],
@@ -417,14 +421,10 @@ class _ProductScreenState extends State<ProductScreen> {
                       icon: Icon((Icons.search))),
                   IconButton(
                       onPressed: () {
-
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Color(0x00ffffff),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),duration: Duration(seconds: 2), ) );
-                        Future.delayed(Duration(seconds: 1), (){
-                                Navigator
-                                    .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap, args.seller
-                                )as CartArguments
-                                );
-                        });},
+                        Navigator
+                            .pushNamed(context, '/cart-screen', arguments: CartArguments(args.receivedMap, args.seller
+                        ));
+                        },
                       icon: Icon((Icons.shopping_cart_sharp))),
                   IconButton(
                       onPressed: () {

@@ -190,24 +190,12 @@ class _SellersScreenState extends State<SellersScreen> {
           child: Column(
             children: [
               //header
-              Padding(
+               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 25.0,
                   vertical: 10.0,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Text(
-                    //   "Shopice",
-                    //   style: GoogleFonts.poppins(
-                    //     fontWeight: FontWeight.w500,
-                    //     fontSize: 23.0,
-                    //     color: const Color(0xff4E8489),
-                    //   ),
-                    // ),
-                  ],
-                ),
+
               ),
               //list of sellers
               Column(

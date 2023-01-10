@@ -46,6 +46,8 @@ class _CartState extends State<Cart> {
   String buyerName = "";
   int buyerId = -1;
 
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
   void getCartData(int buyerId) {
     ServerHandler().getCart(buyerId).then((value) => {
           setState(() {
@@ -231,12 +233,12 @@ class _CartState extends State<Cart> {
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
                             itemCount: _cart.length,
-                            itemBuilder: (context, index) => CartItem(
-                                carts: _cart[index], productIndex: index),
+                            itemBuilder: (context, index) => CartItem(carts: _cart[index], productIndex: index)
                           ),
                         ),
                       ),
                     ),
+
                     Align(
                       alignment: Alignment.bottomRight,
                       heightFactor: 13.9,

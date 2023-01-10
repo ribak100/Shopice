@@ -83,8 +83,11 @@ class MostPopular extends StatelessWidget {
                           Colors.black12.withOpacity(0.0),
                         ]),
                   ),
-                  child: Image.network(
-                    "http://10.0.2.2:/shopice/assets/${product.image!}",
+                  child: Hero(
+                    tag: "popular.${product.image!}",
+                    child: Image.network(
+                      "http://10.0.2.2:/shopice/assets/${product.image!}",
+                    ),
                   ),
                 ),
               ],

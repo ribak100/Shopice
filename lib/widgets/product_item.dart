@@ -23,21 +23,19 @@ class ProductItem extends StatelessWidget {
     int interact;
     return GestureDetector(
       onTap: () => {
-        Navigator.pushNamed(context, '/product-detaail-screen', arguments: DetailProduct(product, seller, receivedMap)) as DetailProduct,
+        Navigator.pushNamed(context, '/product-detaail-screen', arguments: DetailProduct(product, seller, receivedMap)),
         interact = product.interactionCount!,
         interact +=1,
         ServerHandler().getProductInteraction(
             interact, product.name!, product.sellerId!),
-        print("product name = ${product.name!}"),
-        print("interaction = ${interact}"),
-        print("sellerID = ${product.sellerId!}"),
+
       },
       child: Column(
         //image section
 
         children: [
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            margin: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Stack(
               children: [
                 Container(
@@ -67,8 +65,11 @@ class ProductItem extends StatelessWidget {
                           primaryColor[productIndex % 4].withOpacity(0.0),
                         ]),
                   ),
-                  child: Image.network(
-                    "http://10.0.2.2:/shopice/assets/${product.image!}",
+                  child: Hero(
+                    tag: "product.${product.image!}",
+                    child: Image.network(
+                      "http://10.0.2.2:/shopice/assets/${product.image!}",
+                    ),
                   ),
                 ),
               ],

@@ -132,11 +132,7 @@ class Login extends StatelessWidget {
                 final response = await http.post(
                   Uri.parse('http://10.0.2.2://shopice/api/seller/login'), body: map,
                 );
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Text(response.body);
-                    });
+
 
                 if (response.statusCode == 200) {
                    jsonResponse = jsonDecode(response.body)['seller'];

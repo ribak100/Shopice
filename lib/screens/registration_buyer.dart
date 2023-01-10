@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../utility/removeBg.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+
 
 import '../screens/login.dart';
 import 'registration_seller.dart';
@@ -21,7 +25,10 @@ class Registration_buyer extends StatefulWidget {
 }
 
 class _Registration_buyerState extends State<Registration_buyer> {
-  File? _image;
+  List<int> data = [102, 111, 114, 116, 121, 45, 116, 119, 111, 0];
+  Uint8List _image =  Uint8List.fromList([1, 0, 0, 128]);
+  http.Response? result;
+
   final picker = ImagePicker();
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
@@ -33,11 +40,19 @@ class _Registration_buyerState extends State<Registration_buyer> {
   bool _validateEmail = false;
   bool _validatePassword = false;
   bool _validateAddress = false;
+  late String imagePath;
+
+  bool _imageVisible = false;
+  bool _viewVisible = false;
+  bool _addVisible = false;
+
 
   Future ChoiceImage() async {
     var pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      _image = File(pickedImage!.path);
+      //_image = File(pickedImage!.path);
+      imagePath = pickedImage!.path;
+      _viewVisible = true;
     });
   }
 
@@ -48,7 +63,12 @@ class _Registration_buyerState extends State<Registration_buyer> {
     request.fields['email'] = emailController.text;
     request.fields['password'] = passwordController.text;
     request.fields['address'] = addressController.text;
-    var pic = await http.MultipartFile.fromPath("image", _image!.path);
+
+    final temDir = await getTemporaryDirectory();
+    File file = await File('${temDir.path}/image.png').create();
+    file.writeAsBytesSync(_image);
+
+    var pic = await http.MultipartFile.fromPath("image", file.path);
     request.files.add(pic);
     var response = await request.send();
 
@@ -68,7 +88,6 @@ class _Registration_buyerState extends State<Registration_buyer> {
       });
     }
 
-    print(response.statusCode);
   }
 
 
@@ -224,26 +243,62 @@ class _Registration_buyerState extends State<Registration_buyer> {
               ),
             ),
 
-            Container(
-              height: 150.0,
-              width: 250.0,
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color(0xff4A777A),
-                  ),
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: _image == null
-                  ? ElevatedButton.icon(
-                onPressed: () {
-                  ChoiceImage();
-                },
-                icon: Icon(Icons.file_upload_sharp),
-                label: Text('Upload Image'),
-                style:
-                ElevatedButton.styleFrom(primary: Color(0x9f4A777A)),
-              )
-                  : Image.file(_image!),
+            //image
+
+            Visibility( visible: _imageVisible,
+              child: Container(
+                height: 150.0,
+                width: 250.0,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xff4A777A),
+                    ),
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Image.memory(_image),
+              ),
             ),
+
+            ElevatedButton.icon(
+              onPressed: () async{
+                ChoiceImage();
+                result = await RemoveBg().removeBgApi(imagePath);
+
+                setState(() {
+
+                  _image = result!.bodyBytes;
+                  _imageVisible = true;
+                });
+
+                Future.delayed(Duration(seconds: 10), (){
+
+                });
+              },
+              icon: Icon(Icons.file_upload_sharp),
+              label: Text('Upload Image'),
+              style:
+              ElevatedButton.styleFrom(primary: Color(0x9f4A777A)),
+            ),
+
+
+            Visibility(visible: _viewVisible,
+              child: FlatButton(onPressed: ()async{
+
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: LinearProgressIndicator(color:Color(0xff4A777A) ,),backgroundColor: Colors.white,));
+
+                Future.delayed(Duration(seconds: 3));
+
+                result = await RemoveBg().removeBgApi(imagePath);
+                setState(() {
+
+                  _image = result!.bodyBytes;
+                  _imageVisible = true;
+                  _addVisible = true;
+                });
+
+
+              },color: Color(0x9f4A777A), child: Text('View Image', style: TextStyle(color: Colors.white),)),
+            ),
+
             Padding(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: RaisedButton(

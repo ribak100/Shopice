@@ -78,44 +78,50 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBackground(
-        vsync: this,
-        behaviour: RandomParticleBehaviour(options: particles),
-        child: AnimatedContainer(duration: Duration(seconds: 2),
-          alignment: Alignment.center,
-          color: boxColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
+      body: AnimatedContainer(duration: Duration(seconds: 2),
+        alignment: Alignment.center,
+        color: boxColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TweenAnimationBuilder(
+              tween: Tween<double>(begin: 0, end: 1), curve: Curves.fastLinearToSlowEaseIn,
+              duration: Duration(milliseconds: 1000),
+              builder: (BuildContext context, double value, Widget? child) {
+                return Opacity(
+                  opacity: value,
+                  child: Padding(padding: EdgeInsets.only(top: value * 50,),child: child,),
+                );
+              },
+              child: Text(
                 'Shopice',
                 style: GoogleFonts.pacifico(
                     color: const Color(0xff4E8489), fontSize: 28),
               ),
-              if (showLoadingSellers)
-                const Padding(
-                  padding: EdgeInsets.only(top: 7.0),
-                  child: SizedBox(
-                    height: 20.0,
-                    width: 20.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xff4E8489),
-                      ),
-                      strokeWidth: 1.5,
+            ),
+            if (showLoadingSellers)
+              const Padding(
+                padding: EdgeInsets.only(top: 7.0),
+                child: SizedBox(
+                  height: 20.0,
+                  width: 20.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xff4E8489),
                     ),
+                    strokeWidth: 1.5,
                   ),
                 ),
-              if (showLoadingSellers)
-                Padding(
-                  padding: const EdgeInsets.only(top: 7.0),
-                  child: Text(
-                    'Loading',
-                    style: GoogleFonts.poppins(),
-                  ),
+              ),
+            if (showLoadingSellers)
+              Padding(
+                padding: const EdgeInsets.only(top: 7.0),
+                child: Text(
+                  'Loading',
+                  style: GoogleFonts.poppins(),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
