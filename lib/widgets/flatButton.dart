@@ -21,7 +21,7 @@ class FlatButton extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           height: height,
-          width: 80,
+          width: weight,
           decoration: BoxDecoration(
             color: color,
           ),

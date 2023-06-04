@@ -372,12 +372,12 @@ class _ProductScreenDetailsState extends State<ProductScreenDetails> {
                                         print(args.product.image);
 
                                         if (response.statusCode == 200) {
-                                          var snackbar = SnackBar(
+                                          var snackbar = const SnackBar(
                                             content: Text(
                                                 'Product Added To Cart!',
-                                                style: TextStyle(fontSize: 20.0)),
+                                                style: TextStyle(fontSize: 20.0, color:  Color(0xff4A777A))),
                                             backgroundColor:
-                                                Colors.white,
+                                            Colors.white,
                                             padding: EdgeInsets.only(left: 50.0),
                                           );
                                           ScaffoldMessenger.of(context)

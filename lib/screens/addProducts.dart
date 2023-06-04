@@ -362,7 +362,7 @@ class _AddProductState extends State<AddProduct> {
                 });
 
 
-              },color: Color(0x9f4A777A), child: Text('View Image', style: TextStyle(color: Colors.white),)),
+              },color: const Color(0x9f4A777A), child: Text('View Image', style: TextStyle(color: Colors.white),)),
             ),
             Visibility(visible: _addVisible,
               child: Padding(
@@ -406,7 +406,7 @@ class _AddProductState extends State<AddProduct> {
 
 
                   },
-                  color: Color(0xff4A777A),
+                  color: const Color(0xff4A777A),height: 40, weight: 200,
                   child: Text(
                     "Add Product",
                     style: GoogleFonts.poppins(
@@ -414,7 +414,7 @@ class _AddProductState extends State<AddProduct> {
                       fontSize: 18.0,
                       color: Colors.white,
                     ),
-                  ),height: 40, weight: 120,
+                  ),
                 ),
               ),
             )
