@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shopice/widgets/flatButton.dart';
 import '../models/buying.dart';
 
 import 'package:shopice/server_handler.dart';

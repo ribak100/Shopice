@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopice/screens/editProfile.dart';
 import 'package:shopice/server_handler.dart';
+import 'package:shopice/widgets/flatButton.dart';
 
 
 
@@ -97,7 +98,7 @@ class _EditProfileState extends State<EditProfile> {
 
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(child: Text("Update", style: TextStyle(color: Colors.white)),onPressed: ()  {
+                child: FlatButton(child: Text("Update", style: TextStyle(color: Colors.white)),onPressed: ()  {
                 setState(() {
                   ServerHandler().updateBuyerDetails(int.parse(widget.receivedMap['id']), widget.receivedMap['email'], nameController.text, addressController.text, phoneNumberController.text, countryController.text, nationalityController.text, postalCodeController.text, shippingAddressController.text);
 

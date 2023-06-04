@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,24 +20,22 @@ class SellerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
-    var mapResponse = Map<String, dynamic>();
-    mapResponse['id'] = args.receivedMap['id'];
-    mapResponse['name'] = args.receivedMap['name'];
-    mapResponse['email'] = args.receivedMap['email'];
-    mapResponse['image'] = args.receivedMap['image'];
-    mapResponse['address'] = args.receivedMap['address'];
-    mapResponse['phone_number'] = args.receivedMap['phone_number'];
-    mapResponse['postal_code'] = args.receivedMap['postal_code'];
-    mapResponse['shipping_address'] = args.receivedMap['shipping_address'];
-    mapResponse['country'] = args.receivedMap['country'];
-    mapResponse['nationality'] = args.receivedMap['nationality'];
-    List<Seller> sellers = args.seller.cast<Seller>() ;
+    var mapResponse = <String, dynamic>{};
+    mapResponse['id'] = receivedMap['id'];
+    mapResponse['name'] = receivedMap['name'];
+    mapResponse['email'] = receivedMap['email'];
+    mapResponse['image'] = receivedMap['image'];
+    mapResponse['address'] = receivedMap['address'];
+    mapResponse['phone_number'] = receivedMap['phone_number'];
+    mapResponse['postal_code'] = receivedMap['postal_code'];
+    mapResponse['shipping_address'] = receivedMap['shipping_address'];
+    mapResponse['country'] = receivedMap['country'];
+    mapResponse['nationality'] = receivedMap['nationality'];
     return GestureDetector(
       onTap: () {
         print(mapResponse);
         Navigator
-            .pushNamed(context, '/product-screen', arguments: ProductScreenArguments(seller , mapResponse) )as ProductScreenArguments;
+            .push(context, MaterialPageRoute(builder: (context)=>ProductScreen(seller: seller, receivedMap: receivedMap)));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(
@@ -57,7 +54,7 @@ class SellerItem extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0, top: 30.0),
-                  child: Container(
+                  child: SizedBox(
                     width: 164.0,
                     child: Text(
                       seller.name!,
@@ -103,7 +100,7 @@ class SellerItem extends StatelessWidget {
                             Icon(Icons.star, color: Colors.yellow[700]),
                             Icon(Icons.star, color: Colors.yellow[700]),
                             Icon(Icons.star, color: Colors.yellow[700]),
-                            Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
                           ],
                         ),
                       if (rating == 3)
@@ -112,8 +109,8 @@ class SellerItem extends StatelessWidget {
                             Icon(Icons.star, color: Colors.yellow[700]),
                             Icon(Icons.star, color: Colors.yellow[700]),
                             Icon(Icons.star, color: Colors.yellow[700]),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
                           ],
                         ),
                       if (rating == 2)
@@ -121,25 +118,25 @@ class SellerItem extends StatelessWidget {
                           children: [
                             Icon(Icons.star, color: Colors.yellow[700]),
                             Icon(Icons.star, color: Colors.yellow[700]),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
                           ],
                         ),
                       if (rating == 1)
                         Row(
                           children: [
                             Icon(Icons.star, color: Colors.yellow[700]),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
-                            Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
+                            const Icon(Icons.star, color: Colors.white),
                           ],
                         ),
 
                       if (rating == 0)
                         Row(
-                          children: [
+                          children: const [
                             Icon(Icons.star, color: Colors.white),
                             Icon(Icons.star, color: Colors.white),
                             Icon(Icons.star, color: Colors.white),

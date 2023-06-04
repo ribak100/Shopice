@@ -13,18 +13,19 @@ import '../widgets/cart_item.dart';
 import '../models/priceAndCount.dart';
 import '../screens/payment.dart';
 
-class CartArguments {
-  late final Map<String, dynamic> receivedMap;
-  final Seller seller;
-
-  CartArguments(this.receivedMap, this.seller);
-}
-
+// class CartArguments {
+//
+//   late final Map<String, dynamic> receivedMap;
+//   final Seller seller;
+//   CartArguments(this.receivedMap, this.seller);
+// }
 
 class Cart extends StatefulWidget {
-  static const routeName = '/cart-screen';
 
-  const Cart({Key? key}) : super(key: key);
+  const Cart({Key? key, required this.receivedMap, required this.seller})
+      : super(key: key);
+  final Map<String, dynamic> receivedMap;
+  final Seller seller;
 
   @override
   State<Cart> createState() => _CartState();
@@ -43,8 +44,8 @@ class _CartState extends State<Cart> {
   List<Count> countTotal = [];
   int totalToPay = 0;
   List<Total> calculatedTotal = [];
-  String buyerName = "";
-  int buyerId = -1;
+  late String buyerName;
+  late int buyerId;
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
@@ -56,16 +57,16 @@ class _CartState extends State<Cart> {
         });
   }
 
-  List<Price> getPrice(String buyer_name, int buyerId) {
-    ServerHandler().getPrice(buyer_name, buyerId).then((value) => {
+  List<Price> getPrice(String buyerName, int buyerId) {
+    ServerHandler().getPrice(buyerName, buyerId).then((value) => {
           price = value.cast<Price>(),
         });
     //.catchError((e) => print(e));
     return price;
   }
 
-  List<Count> getCount(String buyer_name, int buyerId) {
-    ServerHandler().getCount(buyer_name, buyerId).then((value) => {
+  List<Count> getCount(String buyerName, int buyerId) {
+    ServerHandler().getCount(buyerName, buyerId).then((value) => {
           count = value.cast<Count>(),
         });
 
@@ -74,9 +75,9 @@ class _CartState extends State<Cart> {
   }
 
   //get total from buy
-  Future<List<Total>> getTotalPrice(String buyer_name, int buyerId) async {
+  Future<List<Total>> getTotalPrice(String buyerName, int buyerId) async {
     List<Total> total = [];
-    total = await ServerHandler().getTotalPrice(buyer_name, buyerId);
+    total = await ServerHandler().getTotalPrice(buyerName, buyerId);
 
     return total;
   }
@@ -95,11 +96,6 @@ class _CartState extends State<Cart> {
     calculatedTotal = await getTotalPrice(buyerName, buyerId);
   }
 
-  @override
-  void setState(VoidCallback fn) {
-    // TODO: implement setState
-    super.setState(fn);
-  }
 
   @override
   void dispose() {
@@ -109,240 +105,251 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)!.settings.arguments as CartArguments;
-    buyerName = args.receivedMap['name'];
-    buyerId = int.parse(args.receivedMap['id']);
+    //var args = ModalRoute.of(context)!.settings.arguments as CartArguments;
+    buyerName = widget.receivedMap['name'];
+    buyerId = int.parse(widget.receivedMap['id']);
     if (_firstExec == true) {
       _firstExec == false;
-      if (args.receivedMap['id'] != null) {
-        getCartData(int.parse(args.receivedMap['id']));
+      if (widget.receivedMap['id'] != null) {
+        getCartData(int.parse(widget.receivedMap['id']));
       }
     }
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 35.0, right: 30.0, top: 50.0, bottom: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Shopice",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 23.0,
-                        color: const Color(0xff4E8489),
+    return SingleChildScrollView(
+      child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 35.0, right: 30.0, top: 50.0, bottom: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Shopice",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 23.0,
+                            color: const Color(0xff4E8489),
+                          ),
+                        ),
+                        if (widget.receivedMap['image'] == null)
+                          Container(
+                            height: 45.0,
+                            width: 45.0,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.grey),
+                          )
+                        else if (widget.receivedMap['image'] != null)
+                          Container(
+                            height: 45.0,
+                            width: 45.0,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        "http://10.0.2.2:/shopice/assets/${widget.receivedMap['image']}"),
+                                    fit: BoxFit.fitWidth),
+                                shape: BoxShape.circle,
+                                color: Colors.grey),
+                          )
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 284.0, bottom: 0.0),
+                    child: Icon(
+                      Icons.delete_outline,
+                      color: Colors.grey,
+                      size: 35.0,
+                    ),
+                  ),
+                  if (widget.receivedMap['id'] == null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 200.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 20.0,
+                            width: 20.0,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff4E8489),
+                              ),
+                              strokeWidth: 1.5,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7.0),
+                            child: Text(
+                              "Login To View Cart",
+                              style: GoogleFonts.poppins(color: Colors.grey),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    if (args.receivedMap['image'] == null)
-                      Container(
-                        height: 45.0,
-                        width: 45.0,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.grey),
-                      )
-                    else if (args.receivedMap['image'] != null)
-                      Container(
-                        height: 45.0,
-                        width: 45.0,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}"),
-                                fit: BoxFit.fitWidth),
-                            shape: BoxShape.circle,
-                            color: Colors.grey),
-                      )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 284.0, bottom: 0.0),
-                child: const Icon(
-                  Icons.delete_outline,
-                  color: Colors.grey,
-                  size: 35.0,
-                ),
-              ),
-              if (args.receivedMap['id'] == null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 200.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xff4E8489),
+                  if (widget.receivedMap['id'] != null && _cart.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 200.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 20.0,
+                            width: 20.0,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xff4E8489),
+                              ),
+                              strokeWidth: 1.5,
+                            ),
                           ),
-                          strokeWidth: 1.5,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Text(
-                          "Login To View Cart",
-                          style: GoogleFonts.poppins(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (args.receivedMap['id'] != null && _cart.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 200.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Color(0xff4E8489),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7.0),
+                            child: Text(
+                              "Add Products to see available products",
+                              style: GoogleFonts.poppins(color: Colors.grey),
+                            ),
                           ),
-                          strokeWidth: 1.5,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Text(
-                          "Add Products to see available products",
-                          style: GoogleFonts.poppins(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (args.receivedMap['id'] != null)
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 0.0),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 150,
-                          child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: _cart.length,
-                            itemBuilder: (context, index) => CartItem(carts: _cart[index], productIndex: index)
-                          ),
-                        ),
+                        ],
                       ),
                     ),
-
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      heightFactor: 13.9,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  right: 30.0, left: 19.0, top: 1.5),
-                              child: GestureDetector(
-                                //behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  totalFunction();
-                                  totalToPay = totalPrice(calculatedTotal);
-                                },
-                                child: Container(
-                                  height: 40.0,
-                                  width: 150.0,
-                                  alignment: Alignment.centerLeft,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black45), borderRadius: BorderRadius.circular(20)),
-                                  child: Text(textAlign: TextAlign.center,
-                                    "  Total(#$totalToPay)",
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17.0,
-                                      color: const Color(0x9f000000),
+                  if (widget.receivedMap['id'] != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 0.0),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0),
+                              child: SizedBox(
+                                height: MediaQuery.of(context).size.height -225,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: _cart.length,
+                                    itemBuilder: (context, index) => CartItem(
+                                        carts: _cart[index],
+                                        productIndex: index)),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            heightFactor: 12.2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 30.0, left: 19.0, top: 1.5),
+                                    child: GestureDetector(
+                                      //behavior: HitTestBehavior.translucent,
+                                      onTap: () {
+                                        totalFunction();
+                                        totalToPay = totalPrice(calculatedTotal);
+                                      },
+                                      child: Container(
+                                        height: 40.0,
+                                        width: 150.0,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.black45),
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          "  Total(#$totalToPay)",
+                                          style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 17.0,
+                                            color: const Color(0x9f000000),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      color: const Color(0x9fFFC107),
+                                    ),
+                                    width:
+                                        MediaQuery.of(context).size.width - 220,
+                                    height: 40.0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (totalToPay == 0) {
+                                          var snackBar = const SnackBar(
+                                            content: Text(
+                                                'Select Products Before Sliding',
+                                                style: TextStyle(fontSize: 18.0)),
+                                            backgroundColor: Color(0xff4A777A),
+                                            padding: EdgeInsets.only(left: 50.0),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        }
+                                      },
+                                      onHorizontalDragUpdate: (event) async {
+                                        setState(() {
+                                          totalFunction();
+                                          totalToPay =
+                                              totalPrice(calculatedTotal);
+
+                                          if (totalToPay != 0) {
+                                            if (event.primaryDelta! > 20) {
+                                              _incrementTranslate();
+                                              Future.delayed(
+                                                  const Duration(seconds: 5), () {
+                                                Navigator.pushNamed(
+                                                    context, '/payment-screen',
+                                                    arguments:
+                                                        PaymentScreenArguments(
+                                                            totalToPay,
+                                                            widget.receivedMap,
+                                                            widget.seller));
+                                              });
+                                            }
+                                          }
+                                        });
+                                      },
+                                      child: Row(
+                                        children: [
+                                          paymentSuccessfull(),
+                                          width == 0.0
+                                              ? Expanded(
+                                                  child: Center(
+                                                  child: Text(
+                                                    "Slide To Checkout($checkout)",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12.0,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                ))
+                                              : SizedBox()
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50.0),
-                                color: const Color(0x9fFFC107),
-                              ),
-                              width: MediaQuery.of(context).size.width - 220,
-                              height: 40.0,
-                              child: GestureDetector(
-                                onTap: (){
-                                  if(totalToPay == 0){
-
-                                    var snackBar = const SnackBar(
-                                      content: Text(
-                                          'Select Products Before Sliding',
-                                          style: TextStyle(fontSize: 18.0)),
-                                      backgroundColor:
-                                      Color(0xff4A777A),
-                                      padding: EdgeInsets.only(left: 50.0),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-
-                                },
-                                onHorizontalDragUpdate: (event) async {
-                                  setState(() {
-
-                                    totalFunction();
-                                    totalToPay = totalPrice(calculatedTotal);
-
-                                    if(totalToPay != 0){
-                                    if (event.primaryDelta! > 20) {
-                                      _incrementTranslate();
-                                      Future.delayed(const Duration(seconds: 5), (){
-
-                                        Navigator.pushNamed(context, '/payment-screen', arguments: PaymentScreenArguments(totalToPay, args.receivedMap, args.seller));
-
-                                      });
-                                    }
-                                  } });
-
-                                },
-                                child: Row(
-                                  children: [
-                                    paymentSuccessfull(),
-                                    width == 0.0
-                                        ? Expanded(
-                                            child: Center(
-                                            child: Text(
-                                              "Slide To Checkout($checkout)",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.w800),
-                                            ),
-                                          ))
-                                        : SizedBox()
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                )
-            ],
-          ),
-        ),
-      ),
+
+
+                ],
+              ),
+            ),
     );
   }
 
@@ -370,7 +377,9 @@ class _CartState extends State<Cart> {
                         ' Processing ',
                         style: TextStyle(color: Colors.white, fontSize: 12.0),
                       )),
-                      SizedBox(height: 20.0, width: 20.0,
+                      SizedBox(
+                        height: 20.0,
+                        width: 20.0,
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                             Color(0xffffffff),

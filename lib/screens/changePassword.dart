@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopice/server_handler.dart';
+import 'package:shopice/widgets/flatButton.dart';
 
 
 
@@ -88,7 +89,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(child: Text("Change", style: TextStyle(color: Colors.white)),onPressed: ()  async{
+                child: FlatButton(child: Text("Change", style: TextStyle(color: Colors.white)),onPressed: ()  async{
 
                   setState(() {
                     oldController.text.isEmpty ? _validateoldController = true : _validateoldController = false;

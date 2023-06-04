@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:animated_background/animated_background.dart';
 import 'package:shopice/screens/payment.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopice/widgets/flatButton.dart';
 
 import '../server_handler.dart';
 import '../screens/sellers_screen.dart';
@@ -277,7 +277,7 @@ class _PaymentScreenState extends State<PaymentScreen>
               Visibility( visible: payButtonVisible,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: RaisedButton(
+                  child: FlatButton(
                     onPressed: () async{
                       await ServerHandler().payment(args.seller.id!, int.parse(args.receivedMap['id']), "paid");
                       ServerHandler().deleteCartProduct(int.parse(args.receivedMap['id']), args.receivedMap['name']);
@@ -416,7 +416,7 @@ class _PaymentScreenState extends State<PaymentScreen>
                     Visibility( visible: payButtonVisible,
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: RaisedButton(
+                        child: FlatButton(
                           onPressed: () => print('Pay Clicked'),
                           color:Color(0xff4E8489) ,child: Text(textAlign: TextAlign.center,
                           "Pay",

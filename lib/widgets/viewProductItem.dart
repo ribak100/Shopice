@@ -8,6 +8,8 @@ import '../models/product.dart';
 import '../utility/colors.dart';
 import '../models/seller.dart';
 import '../screens/product_detail_screen.dart';
+import 'package:shopice/widgets/flatButton.dart';
+
 
 class ViewProductItem extends StatefulWidget {
   final Product product;

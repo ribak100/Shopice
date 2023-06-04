@@ -28,23 +28,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(receivedMap: {},),
+      home: const SplashScreen(receivedMap: {},),
 
       routes: {
-        SellersScreen.routeName: (_) => const SellersScreen(),
-        ProductScreen.routeName: (_) => const ProductScreen(),
+
         ProductScreenDetails.routeName: (_) => const ProductScreenDetails(),
         Login.routeName: (_) =>  Login(),
         LoginBuyer.routeName: (_) =>  LoginBuyer(),
         Registration_seller.routeName: (_) => const Registration_seller(),
         Registration_buyer.routeName: (_) => const Registration_buyer(),
-        Cart.routeName: (_) => const Cart(),
         PaymentScreen.routeName: (_) => const PaymentScreen(),
-        Profile.routeName: (_) => const Profile(),
         About.routeName: (_) => const About(),
-        //ViewProduct.routeName: (_) => const ViewProduct(),
-
-       // AddProduct.routeName: (_) => const AddProduct(),
 
 
 

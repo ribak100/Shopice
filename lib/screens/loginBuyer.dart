@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopice/widgets/flatButton.dart';
 
 import '../models/seller.dart';
 import '../screens/splash_screen.dart';
@@ -142,7 +143,8 @@ class _LoginBuyerState extends State<LoginBuyer> {
                         borderRadius: BorderRadius.circular(20))),
               ),
             ),
-            RaisedButton(
+            FlatButton(
+              height: 35,
               onPressed: () async {
                 setState(() {
 
@@ -155,11 +157,6 @@ class _LoginBuyerState extends State<LoginBuyer> {
                 final response = await http.post(
                   Uri.parse('http://10.0.2.2://shopice/api/buyer/login'), body: map,
                 );
-                // showModalBottomSheet(
-                //     context: context,
-                //     builder: (context) {
-                //       return Text(response.body);
-                //     });
 
                 if (response.statusCode == 200) {
                   jsonResponse = jsonDecode(response.body)['buyer'];

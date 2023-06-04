@@ -267,9 +267,15 @@ class ServerHandler {
       http.Response response = await http
           .get(Uri.parse('$_baseUrl/buyer/get_total_price?buyer_id=$buyerId&buyer_name=$buyer_name'));
 
+      print(json.decode(response.body)['price']);
       List totalList = json.decode(response.body)['price'];
       for (Map m in totalList) {
-        total.add(Total.fromMap(m));
+        if(totalList.isEmpty){
+          print("total is empty");
+        }else
+          {
+            total.add(Total.fromMap(m));
+          }
       }
 
       return total;

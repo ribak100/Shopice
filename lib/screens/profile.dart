@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:mailto/mailto.dart';
 
 import 'package:shopice/screens/QandA.dart';
@@ -19,16 +17,19 @@ import '../screens/changePassword.dart';
 import '../utility/pageRoutes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileScreenArguments {
-  final Map<String, dynamic> receivedMap;
+import '../widgets/flatButton.dart';
 
-  ProfileScreenArguments(this.receivedMap);
-}
+// class ProfileScreenArguments {
+//
+//
+//   ProfileScreenArguments(this.receivedMap);
+// }
 
 class Profile extends StatefulWidget {
   static const routeName = '/profile-screen';
 
-  const Profile({Key? key}) : super(key: key);
+  const Profile({Key? key, required this.receivedMap}) : super(key: key);
+  final Map<String, dynamic> receivedMap;
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -131,8 +132,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as ProfileScreenArguments;
+    // final widget = ModalRoute.of(context)!.settings.arguments as ProfileScreenArguments;
     return Scaffold(
       backgroundColor: Color(0xffE6F3EC),
       body: SingleChildScrollView(
@@ -144,21 +144,21 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                 child: Column(
                   children: [
                     Hero(
-                      tag: "profile_image.${args.receivedMap['image']}",
+                      tag: "profile_image.${widget.receivedMap['image']}",
                       child: Container(
                         height: 112.0,
                         width: 112.0,
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "http://10.0.2.2:/shopice/assets/${args.receivedMap['image']}"),
+                                    "http://10.0.2.2:/shopice/assets/${widget.receivedMap['image']}"),
                                 fit: BoxFit.fitHeight),
                             shape: BoxShape.circle,
                             color: Colors.grey),
                       ),
                     ),
                     Text(
-                      args.receivedMap['name'],
+                      widget.receivedMap['name'],
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                         fontSize: 17.0,
@@ -204,7 +204,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     onPressed: () => Navigator.of(context).push(
                                         CustomPageRouteLR(
                                             child: Pending(
-                                                receivedMap: args.receivedMap),
+                                                receivedMap: widget.receivedMap),
                                             direction: AxisDirection.right)),
                                     icon: Icon(Icons.wallet),
                                     color: Color(0xff4A777A),
@@ -226,7 +226,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     onPressed: () => Navigator.of(context).push(
                                         FadePageRouteLR(
                                             child: PaidOrder(
-                                                receivedMap: args.receivedMap),
+                                                receivedMap: widget.receivedMap),
                                             direction: AxisDirection.right)),
                                     icon: Icon(Icons.pending),
                                     color: Color(0xff4A777A),
@@ -249,7 +249,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     onPressed: () => Navigator.of(context).push(
                                         FadePageRouteLR(
                                             child: Shipped(
-                                                receivedMap: args.receivedMap),
+                                                receivedMap: widget.receivedMap),
                                             direction: AxisDirection.left)),
                                     icon: Icon(Icons.local_shipping),
                                     color: Color(0xff4A777A),
@@ -271,7 +271,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     onPressed: () => Navigator.of(context).push(
                                         CustomPageRouteLR(
                                             child: DeliveredOrder(
-                                                receivedMap: args.receivedMap),
+                                                receivedMap: widget.receivedMap),
                                             direction: AxisDirection.left)),
                                     icon: Icon(Icons.library_add_check),
                                     color: Color(0xff4A777A),
@@ -325,7 +325,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               onTap: () => Navigator.of(context).push(
                                   ScaleFadePageRouteLR(
                                       child: ViewProfile(
-                                          receivedMap: args.receivedMap),
+                                          receivedMap: widget.receivedMap),
                                       direction: AxisDirection.right)),
                               child: Container(
                                 height: 85.0,
@@ -363,7 +363,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               onTap: () => Navigator.of(context).push(
                                   FadeScalePageRoute(
                                       child: EditProfile(
-                                          receivedMap: args.receivedMap))),
+                                          receivedMap: widget.receivedMap))),
                               child: Container(
                                 height: 85.0,
                                 width: 100,
@@ -401,7 +401,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               onTap: () => Navigator.of(context).push(
                                   ScaleFadePageRouteLR(
                                       child: ChangePassword(
-                                          receivedMap: args.receivedMap),
+                                          receivedMap: widget.receivedMap),
                                       direction: AxisDirection.left)),
                               child: Container(
                                 height: 85.0,
@@ -636,7 +636,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                               size: 40.0,
                                                             ),
                                                             title: Text(
-                                                              'Shipping Address : ${args.receivedMap['shipping_address']} Postal Code : ${args.receivedMap['postal_code']}',
+                                                              'Shipping Address : ${widget.receivedMap['shipping_address']} Postal Code : ${widget.receivedMap['postal_code']}',
                                                               style: TextStyle(
                                                                   fontSize:
                                                                       18.0),
@@ -712,7 +712,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           Future.delayed(Duration(seconds: 3),
                                               () {
                                             _launchWhatsapp(
-                                                args.receivedMap['name']);
+                                                widget.receivedMap['name']);
                                           });
                                         },
                                         icon: Icon(Icons.support_agent),
@@ -882,7 +882,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(
-                                                                  SnackBar(
+                                                                  const SnackBar(
                                                             content:
                                                                 LinearProgressIndicator(
                                                               color: Color(
@@ -892,20 +892,22 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                                 Colors.white,
                                                           ));
                                                           Future.delayed(
-                                                              Duration(
+                                                              const Duration(
                                                                   seconds: 3),
                                                               () {
                                                             _launchMailto(
                                                                 appSuggesstionController
                                                                     .text,
-                                                                args.receivedMap[
+                                                                widget.receivedMap[
                                                                     'name'],
-                                                                args.receivedMap[
+                                                                widget.receivedMap[
                                                                     'email'],
                                                                 subjectController
                                                                     .text);
                                                           });
                                                         },
+                                                        color:
+                                                            Color(0xff4A777A),
                                                         child: Text(
                                                           "Submit",
                                                           style: GoogleFonts
@@ -916,11 +918,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                             color: Colors.white,
                                                           ),
                                                         ),
-                                                        color:
-                                                            Color(0xff4A777A),
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 280,
                                                     ),
                                                   ],
@@ -931,8 +931,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                       BorderRadius.circular(
                                                           20)));
                                         },
-                                        icon: Icon(Icons.settings_suggest),
-                                        color: Color(0xff4A777A),
+                                        icon: const Icon(Icons.settings_suggest),
+                                        color: const Color(0xff4A777A),
                                         iconSize: 40.0),
                                     Text("       App\nsuggestions",
                                         style: GoogleFonts.poppins(
@@ -949,12 +949,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                   children: [
                                     IconButton(
                                         onPressed: () {
-                                          var snackbar = SnackBar(
+                                          var snackbar = const SnackBar(
                                             content: Text("Logout Succesfull",
                                                 style:
                                                     TextStyle(fontSize: 20.0)),
                                             backgroundColor:
-                                                const Color(0xff4A777A),
+                                                Color(0xff4A777A),
                                             padding:
                                                 EdgeInsets.only(left: 50.0),
                                           );
@@ -964,7 +964,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           Navigator.pop(context);
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
-                                                settings: RouteSettings(
+                                                settings: const RouteSettings(
                                                     name: '/splash-screen'),
                                                 builder: (context) =>
                                                     SplashScreen(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopice/widgets/flatButton.dart';
 
 import '../models/seller.dart';
 import '../screens/addProducts.dart';
@@ -125,7 +126,8 @@ class Login extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20))),
               ),
             ),
-            RaisedButton(
+            FlatButton(
+              height: 35,
               onPressed: () async {
                  map['email'] = emailController.text;
                  map['password'] = passwordController.text;

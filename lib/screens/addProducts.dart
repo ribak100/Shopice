@@ -16,7 +16,7 @@ import '../screens/viewProducts.dart';
 import '../screens/availableOrder.dart';
 import '../screens/shippedOrder.dart';
 import '../screens/completedOrder.dart';
-
+import 'package:shopice/widgets/flatButton.dart';
 
 class AddProduct extends StatefulWidget {
   //static const routeName = '/addProduct-screen';
@@ -367,9 +367,9 @@ class _AddProductState extends State<AddProduct> {
             Visibility(visible: _addVisible,
               child: Padding(
                 padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                child: RaisedButton(
-                  shape: BeveledRectangleBorder(),
-                  elevation: 10.0,
+                child: FlatButton(
+                  // shape: BeveledRectangleBorder(),
+                  // style: 10.0,
                   onPressed: () async{
                     setState(() {
                       nameController.text.isEmpty
@@ -411,10 +411,10 @@ class _AddProductState extends State<AddProduct> {
                     "Add Product",
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: 20.0,
+                      fontSize: 18.0,
                       color: Colors.white,
                     ),
-                  ),
+                  ),height: 40, weight: 120,
                 ),
               ),
             )

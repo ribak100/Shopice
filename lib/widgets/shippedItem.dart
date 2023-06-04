@@ -9,6 +9,8 @@ import '../models/product.dart';
 import '../utility/colors.dart';
 import '../models/buyer.dart';
 import '../screens/product_detail_screen.dart';
+import 'package:shopice/widgets/flatButton.dart';
+
 
 class ShippedItem extends StatefulWidget {
   final BuyModel buyModel;
@@ -146,9 +148,9 @@ class _ShippedItemState extends State<ShippedItem> {
                   Row(children: [
                   Padding(
                   padding: const EdgeInsets.only(left: 50.0,right: 50.0),
-                  child: FlatButton(color: Colors.grey, onPressed: () => Navigator.of(context).pop(), child: Text('No', style: TextStyle(color: Color(0xff4A777A)),)),
+                  child: FlatButton(height: 45, weight: 120, color: Colors.grey, onPressed: () => Navigator.of(context).pop(), child: Text('No', style: TextStyle(color: Color(0xff4A777A)),)),
                   ),
-                  FlatButton(color: Color(0xff4A777A), onPressed: () async{
+                  FlatButton(height: 45, weight: 120,color: Color(0xff4A777A), onPressed: () async{
 
                   String image =  await ServerHandler().getImage(int.parse(widget.buyModel.sellerId!), int.parse(widget.buyModel.buyerId!), widget.buyModel.price!, widget.buyModel.productName!);
                   String success = await ServerHandler().delivery(int.parse(widget.buyModel.sellerId!), image, int.parse(widget.buyModel.buyerId!), "delivered");

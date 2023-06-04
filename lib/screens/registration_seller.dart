@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shopice/widgets/flatButton.dart';
 import '../utility/removeBg.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -312,9 +313,9 @@ class _Registration_sellerState extends State<Registration_seller> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: RaisedButton(
-                shape: BeveledRectangleBorder(),
-                elevation: 10.0,
+              child: FlatButton(
+                // shape: BeveledRectangleBorder(),
+                // elevation: 10.0,
                 onPressed: () {
                   setState(() {
                     nameController.text.isEmpty
